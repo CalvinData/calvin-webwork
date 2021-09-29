@@ -1,0 +1,107 @@
+## DESCRIPTION
+## Multiple choice template
+## ENDDESCRIPTION
+
+
+## DBsubject(WeBWorK)
+## DBchapter(WeBWorK tutorial)
+## DBsection(PGML tutorial 2015)
+## Date(06/01/2015)
+## Institution(Hope College)
+## Author(Paul Pearson)
+## MO(1)
+## KEYWORDS('multiple choice', 'template')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserRadioButtons.pl",
+  "PGML.pl",
+  "PGcourse.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+
+$radio1 = RadioButtons(
+  ["Binomial","Negative Binomial","None of these"],
+  "Binomial", # correct answer
+  last => ["None of these"], # can be a list
+);
+$radio2 = RadioButtons(
+  ["Binomial","Negative Binomial","None of these"],
+  "Negative Binomial", # correct answer
+  last => ["None of these"], # can be a list
+);
+$radio3 = RadioButtons(
+  ["Binomial","Negative Binomial","None of these"],
+  "None of these", # correct answer
+  last => ["None of these"], # can be a list
+);
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+In each situation, determine the correct family of distribution.
+
+(a) Flip 10 coins and count the number of heads.
+
+[@ $radio1->buttons() @]*
+
+(b) Deal 5 cards and count the number of face cards (jacks, queens, and kings)
+
+[@ $radio3->buttons() @]*
+
+(c) Flip a coin until you get a head and count the number of flips.
+
+[@ $radio3->buttons() @]*
+
+(d) Stand outside the dining hall for 10 minutes and count the number 
+of students who are wearing school clothing.
+
+[@ $radio3->buttons() @]*
+
+
+END_PGML
+
+############################
+#  Answer evaluation
+
+install_problem_grader(~~&std_problem_grader);
+
+$showPartialCorrectAnswers = 0;
+
+ANS( $radio1->cmp() );
+ANS( $radio3->cmp() );
+ANS( $radio3->cmp() );
+ANS( $radio3->cmp() );
+
+
+############################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+The correct answers are 
+[$radio1->correct_ans()],
+[$radio3->correct_ans()] (independence fails),
+[$radio3->correct_ans()] (for negative binomial, we must count the tails),
+[$radio3->correct_ans()] (neither a fixed number of trials, nor a stopping condition based on trials).
+
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();

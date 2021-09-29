@@ -1,0 +1,57 @@
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "PGML.pl",
+  "MathObjects.pl",
+  "PGcourse.pl",
+  "parserNumberWithUnits.pl",
+  "contextArbitraryString.pl",
+  "parserMultiAnswer.pl",
+  "parserPopUp.pl",
+  "contextInequalities.pl",
+  "PGgraphmacros.pl",
+);
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+Context("Numeric") ; 
+Context()->flags->set(tolerance => 0.002);
+
+$maroon1 = random(1,4);
+$gold1 = random(5,8);
+$all1 = $maroon1 + $gold1;
+$maroon2 = random(2, 4);
+$gold2 = 10 - $maroon2;
+$all2 = $maroon2 + $gold2;
+$maroon3 = random(5,8);
+$gold3 = random(1,4);
+$all3 = $maroon3 + $gold3;
+
+$answer1 = (0.25 * $gold1/$all1 + 0.5 * $gold2/$all2 + 0.25 * $gold3/$all3);
+$answer2 = $gold2/$all2;
+$answer3 = 0.5 * $gold2/$all2 / (0.25 * $gold1/$all1 + 0.5 * $gold2/$all2 + 0.25 * $gold3/$all3);
+
+######################################################################
+BEGIN_PGML
+Barbara has three boxes.  She's a computer scientist, so she numbers her boxes starting with 0. 
+* Box 0 contains [$maroon1] maroon balls and [$gold1] gold balls.
+* Box 1 contains [$maroon2] maroon balls and [$gold2] gold balls.
+* Box 2 contains [$maroon3] maroon balls and [$gold3] gold balls.
+
+Suppose that Barbara selects a ball by first flipping two fair coins.  If she gets 0 heads, she chooses
+box 0.  If she gets 1 head, she choose box 1.  If she gets 2 heads, she chooses box 2.
+Once she has selected a box, she draws one ball out of the box (each ball equally likely to be drawn).
+
+
+What is the probability that Barbara selects a gold ball?
+[_______]{$answer1}
+
+If Barbara selects a ball from Box 1, what is the probability
+that that ball will be gold? [______]{$answer2}
+
+If Barbara selects a gold ball, what is the probability that it came 
+from Box 1? [______]{$answer3}
+END_PGML
+######################################################################
+
+ENDDOCUMENT();
