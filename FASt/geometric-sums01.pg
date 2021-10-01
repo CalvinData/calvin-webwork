@@ -20,7 +20,7 @@
 
 ########################################################################
 
-DOCUMENT();      
+DOCUMENT();
 
 loadMacros(
   "PGstandard.pl",
@@ -43,13 +43,10 @@ TEXT(beginproblem());
 ##############################################################
 Context->("Numeric");
 
-# Do this in R
-rserve_start();
-
 # Randomly generate some geometric sums
 
-rserve_eval('lo <- resample(2:4, 3);
-hi <- lo + resample(6:8, 3);
+rserve_eval('lo <- sample(2:4, 3, replace = TRUE);
+hi <- lo + sample(6:8, 3, replace = TRUE);
 r <- c(2, 3, 3/4);
 ans <- numeric(3);
 seq1 <- sapply(seq(lo[1], hi[1], by = 1), function(i) 3 * (1/2)^lo[1] * r[1]^i);
@@ -73,7 +70,6 @@ $seq3 = join ", ", @seq3;
 @ans = rserve_eval('ans');
 $ans = join ", ", @ans;
 
-rserve_finish();
 ##############################################################
 
 
@@ -85,7 +81,7 @@ rserve_finish();
 Context()->texStrings;
 BEGIN_PGML
 
-Evaluate the following geometric sums: 
+Evaluate the following geometric sums:
 
 a) [``[$seq1[0]] + [$seq1[1]] + \cdots + [$seq1[-1]]``]    = [_________]{$ans[0]}
 
