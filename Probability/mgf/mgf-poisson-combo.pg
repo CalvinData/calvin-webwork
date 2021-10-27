@@ -35,8 +35,6 @@ loadMacros("PGML.pl");
 TEXT(beginproblem());
 
 
-$ans <- Compute("L1 + L2");
-
 
 ##############################################################
 #  Question in Text
@@ -54,7 +52,7 @@ Is [`X + Y`] a Poison random variable?  If so, what is the rate parameter?
 Note: use L1 and L2 instead of [`\lambda_1`] and [`\lambda_2`] in
 your answer.  If the distribution is not Poisson, enter 0.
 
-rate: [____________________] {fun_cmp("L1 + L2", vars => ['L1', 'L2'])}
+rate: [____________________]{fun_cmp('L1 + L2', vars => ['L1', 'L2'])}
 
 END_PGML
 ##############################################################
