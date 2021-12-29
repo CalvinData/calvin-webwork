@@ -1,0 +1,210 @@
+## DESCRIPTION
+## Multiple choice template
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Data)
+## DBsection(Variables and Cases)
+## Date(12/28/2021)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('cases', 'variables', 'rectangular data')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserRadioButtons.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextString.pl",
+  "contextArbitraryString.pl"
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("ArbitraryString");
+Context()->flags->set(noLaTeXresults => 1);
+
+rserve_eval('
+  library(tidyr); library(dplyr); library(ggformula);
+  ');
+
+rserve_eval('
+  Drinks1 <- tibble(
+    before = c(68, 54, 71, 82, 58, 80) / 100,
+    after1 = c(73, 64, 66, 92, 68, 87) / 100,
+    after2 = c(80, 92, 83, 97, 70, 92) / 100,
+    after3 = c(138, 144, 146, 151, 149, 154) / 100
+    );
+
+  Drinks2 <-
+    Drinks1 |>
+    mutate(subject = paste("S", 1:6)) |>
+    pivot_longer(before:after3, names_to = "drinks", values_to = "reaction_time") |>
+    mutate(drinks = readr::parse_number(drinks)) |>
+    mutate(drinks = ifelse(is.na(drinks), 0, drinks));
+
+');
+
+($data1) = rserve_eval('
+  knitr::kable(Drinks1, format = "html") |>
+    capture.output() |>
+    paste(collapse = " ");
+  ');
+
+($data2) = rserve_eval('
+  knitr::kable(Drinks2 |> head(6), format = "html") |>
+    capture.output() |>
+    paste(collapse = " ");
+  ');
+
+$radio1 = RadioButtons(
+  ["a measurement of reaction time",
+   "a person",
+   "the number of drinks",
+   "none of these"],
+  "a person", # correct answer
+  last => ["none of these"], # can be a list
+);
+
+$radio2 = RadioButtons(
+  ["1: reaction time",
+   "2: reaction time with and without alcohol",
+   "3: baseline reaction time, reaction time after drinking, number of drinks",
+   "4: four different reaction times",
+   "none of these"
+   ],
+   3,  # correct answer
+  last => ["none of these"], # can be a list
+);
+
+$radio3 = RadioButtons(
+  ["a measurement of reaction time",
+   "a person",
+   "the number of drinks",
+   "none of these"],
+   0, # correct answer
+  last => ["none of these"], # can be a list
+);
+
+$radio4 = RadioButtons(
+  ["1: the same as before, it's the same data",
+   "2: reaction time with and without alcohol",
+   "3: subject, reaction time, number of drinks",
+   "4: four different reaction times",
+   "none of these"
+   ],
+   2,  # correct answer
+  last => ["none of these"], # can be a list
+);
+
+$plot1 = 'gf_line(reaction_time ~ drinks, color = ~ subject, data = Drinks2)';
+
+$summary_cmd = 'df_stats(reaction_time ~ drinks, data = Drinks2, mean, median, sd)';
+
+($summary) = rserve_eval('
+  knitr::kable(' . $summary_cmd . ', format = "html");
+  ');
+
+
+$RAllEqualChecker = sub {
+     my ($correct, $student, $ansHash) = @_;  # get correct and student MathObjects
+     my ($student_code) = $student->value;    # get student answer
+     rserve_eval("library(ggformula); library(tidyr);");
+     my ($score) =
+       rserve_eval("tryCatch(as.integer(isTRUE(all.equal( $correct, $student_code))), error = function(e) FALSE);");
+     return $score;
+   };
+
+$plot1_cmp = String($plot1)->cmp(
+   checker => $RAllEqualChecker
+ );
+
+$summary_cmp = String($summary_cmd)->cmp(
+   checker => $RAllEqualChecker
+ );
+
+
+# Create the plot
+$img = rserve_start_plot('png');
+
+# $plot1 = 'gf_histogram(~eruptions, data = faithful)';
+
+rserve_eval('
+  library(ggformula);
+  theme_set(theme_bw(base_size = 15));
+  print(' . $plot1 . ');
+');
+
+$image_path = rserve_finish_plot($img);
+
+$foo = "This is driving me crazy!";
+
+###########################
+#  Main text
+
+BEGIN_PGML
+Here is a data set from an experiment about how reaction time
+changes after drinking alcohol.  The measurements
+give how long (in seconds) it took for a person to catch a dropped ruler.
+One measurement was taken before drinking any alcohol.
+Successive measurements were made after one, two, and three
+standard drinks.
+
+[$data1]*
+
+
+**a.** What are the rows in this data set?
+
+[___]{$radio1}
+
+**b.** How many variables are there?
+
+[___]{$radio2}
+
+Here are the first few rows of the same data again, but arranged differently.
+
+[$data2]*
+
+**c.** What are the cases now?
+
+[___]{$radio3}
+
+**d.** How many variables are there?
+
+[___]{$radio4}
+
+The two different formats might be useful for different purposes.
+For each of the following, enter the R code you would use to create the
+resulting output. Let's call the first data set **Drinks1**
+and the second data set **Drinks2**.
+
+**e.** Show the R command to create this plot.
+
+[@ image($image_path, width=>400, height=>400) @]*
+
+R code: [______________________________________________________________]{$plot1_cmp}
+
+**f.** Use **df_stats()** to compute the values in the table below.
+
+[@ $summary @]*
+
+R code: [______________________________________________________________]{$summary_cmp}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();

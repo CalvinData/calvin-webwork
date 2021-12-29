@@ -1,0 +1,91 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('ggformula')
+
+## level(2)
+## DBsubject(Statistics)
+## DBchapter(Graphics)
+## DBsection(ggformula)
+## Date(2021/12/28)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(2)
+## TitleText1('No Text')
+
+########################################################################
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+  "contextString.pl",
+  "contextArbitraryString.pl"
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("ArbitraryString");
+Context()->flags->set(noLaTeXresults => 1);
+
+
+# Note use of perl interpolation with R code strings below
+
+$RAllEqualChecker = sub {
+     my ($correct, $student, $ansHash) = @_;  # get correct and student MathObjects
+     my ($student_code) = $student->value;    # get student answer
+     rserve_eval("library(ggformula); library(mosaicData);");
+     my ($score) =
+       rserve_eval("tryCatch(as.integer(isTRUE(all.equal( $correct, $student_code))), error = function(e) FALSE);");
+     return $score;
+   };
+
+# Select target plot
+$ans = 'gf_point(length ~ width, data = KidsFeet)';
+
+$my_cmp = String($ans)->cmp(
+   checker => $RAllEqualChecker
+ );
+
+# Create the plot
+$img = rserve_start_plot('png');
+
+rserve_eval('
+  library(ggformula);
+  library(mosaicData);
+  theme_set(theme_bw(base_size = 15));
+  print(' . $ans . ');
+');
+
+$image_path = rserve_finish_plot($img);
+
+
+##############################################################
+#  Question in Text
+##############################################################
+BEGIN_PGML
+
+[@ image($image_path, width=>400, height=>400) @]*
+
+What R code will create the plot above?
+
+[____________________________________________________]{$my_cmp}
+
+END_PGML
+
+##############################################################
+
+ENDDOCUMENT();
