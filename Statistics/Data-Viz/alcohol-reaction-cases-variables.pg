@@ -51,7 +51,7 @@ rserve_eval('
 
   Drinks2 <-
     Drinks1 |>
-    mutate(subject = paste("S", 1:6)) |>
+    mutate(subject = paste("S", 1:6, sep = "")) |>
     pivot_longer(before:after3, names_to = "drinks", values_to = "reaction_time") |>
     mutate(drinks = readr::parse_number(drinks)) |>
     mutate(drinks = ifelse(is.na(drinks), 0, drinks));
@@ -150,7 +150,23 @@ rserve_eval('
 
 $image_path = rserve_finish_plot($img);
 
-$foo = "This is driving me crazy!";
+($drinks1_remote_file) = rserve_eval('
+  filename <- "drinks1.csv";
+  readr::write_csv(Drinks1, filename);
+  filename');
+
+$drinks1_local_file = rserve_get_file($drinks1_remote_file);
+
+($drinks1_local_url = $drinks1_local_file) =~ s|$tempDirectory|$tempURL|;
+
+($drinks2_remote_file) = rserve_eval('
+  filename <- "drink2.csv";
+  readr::write_csv(Drinks2, filename);
+  filename');
+
+$drinks2_local_file = rserve_get_file($drinks2_remote_file);
+
+($drinks2_local_url = $drinks2_local_file) =~ s|$tempDirectory|$tempURL|;
 
 ###########################
 #  Main text
@@ -165,6 +181,7 @@ standard drinks.
 
 [$data1]*
 
+[@ htmlLink($drinks1_local_url, "Download CSV here.") @]*
 
 **a.** What are the rows in this data set?
 
@@ -177,6 +194,8 @@ standard drinks.
 Here are the first few rows of the same data again, but arranged differently.
 
 [$data2]*
+
+[@ htmlLink($drinks2_local_url, "Download CSV here.") @]*
 
 **c.** What are the cases now?
 
