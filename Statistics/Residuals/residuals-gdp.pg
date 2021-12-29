@@ -58,7 +58,7 @@ rserve_eval('
 
   html_table <-
     function(x) {
-      x |> kbl(format = "html") |> kable_styling(full_width = FALSE) |> as.character()
+      x |> kbl() |> kable_styling(full_width = FALSE) |> as.character()
     };
 
 
