@@ -1,0 +1,99 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('binomial; discrte random variable')
+
+## level(2)
+## DBsubject(Probability)
+## DBchapter(Discrete Random Variables)
+## DBsection(Distributions)
+## Date(2018/09/17)
+## Institution(Calvin College)
+## Author(Randall Pruim)
+## Level(3)
+## TitleText1('No Text')
+## AuthorText1('Randall Pruim')
+## EditionText1('2')
+## Section1('.')
+## Problem1('')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("Numeric");
+
+# Do this in R
+rserve_start();
+
+# Randomly generate parameters: compute answers
+rserve_eval('n <- sample(40:70, 1);
+             p <- sample(20:80, 1) / 100;
+             a <- round(n*p - 4)
+			       ans_a <- dbinom(a, n, p)
+			       ans_b <- pbinom(a, n, p)
+			       ans_c <- 1 - pbinom(a - 1, n, p)
+             1');
+
+# Convert the results back to perl
+@n = rserve_eval('n');
+$n = join ", ", @n;
+@p = rserve_eval('p');
+$p = join ", ", @p;
+@a = rserve_eval('a');
+$a = join ", ", @a;
+
+@ans_a = rserve_eval('ans_a');
+$ans_a = join ", ", @ans_a;
+
+@ans_b = rserve_eval('ans_b');
+$ans_b = join ", ", @ans_b;
+
+@ans_c = rserve_eval('ans_c');
+$ans_c = join ", ", @ans_c;
+
+rserve_finish();
+##############################################################
+
+
+
+
+##############################################################
+#  Question in Text
+##############################################################
+Context()->texStrings;
+BEGIN_PGML
+
+
+Let [`X \sim {\sf Binom}([$n], [$p])`]. Compute the following probabilities.
+
+a) [``P(X = [$a]``]) = [___________]{$ans_a}
+
+b) [``P(X \le [$a]``]) = [___________]{$ans_b}
+
+c) [``P(X \ge [$a]``]) = [___________]{$ans_c}
+
+END_PGML
+##############################################################
+
+ENDDOCUMENT();

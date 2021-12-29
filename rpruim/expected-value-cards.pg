@@ -1,0 +1,97 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('binomial; discrte random variable')
+
+## level(2)
+## DBsubject(Probability)
+## DBchapter(Discrete Random Variables)
+## DBsection(Distributions)
+## Date(2018/09/17)
+## Institution(Calvin College)
+## Author(Randall Pruim)
+## Level(3)
+## TitleText1('No Text')
+## AuthorText1('Randall Pruim')
+## EditionText1('2')
+## Section1('.')
+## Problem1('')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("Numeric");
+
+# Do this in R
+rserve_start();
+
+# Randomly generate parameters: compute answers
+rserve_eval('
+ans0 <- 0;
+ans1 <- choose(4,1) * choose(13,5) / choose(52,5);
+ans2 <- (choose(4,1) * choose(13,4) * choose(3,1) * choose(13,1) +
+         choose(4,1) * choose(13,3) * choose(3,1) * choose(13,2)) /
+         choose(52,5);
+ans4 <- choose(4,1) * choose(13,2) * 13 * 13 * 13 / choose(52, 5);
+ans3 <- 1 - ans1 - ans2 - ans4;
+ansE <- ans1 * 1 + ans2 * 2 + ans3 * 3 + ans4 * 4;
+answers <- c(ans0, ans1, ans2, ans3, ans4, ansE);
+1');
+
+# Convert the results back to perl
+
+@answers = rserve_eval('answers');
+$answers = join ", ", @answers;
+
+rserve_finish();
+##############################################################
+
+
+
+
+##############################################################
+#  Question in Text
+##############################################################
+Context()->texStrings;
+BEGIN_PGML
+
+Let [`X`] count the number of suits in a 5-card hand dealt from a standard 52-card deck.
+
+a) [`P(X = 0) = `] [__________]{$answers[0]}
+
+b) [`P(X = 1) = `] [__________]{$answers[1]}
+
+c) [`P(X = 2) = `] [__________]{$answers[2]}
+
+d) [`P(X = 3) = `] [__________]{$answers[3]}
+
+e) [`P(X = 4) = `] [__________]{$answers[4]}
+
+f) [`E(X) = `] [__________]{$answers[5]}
+
+
+END_PGML
+##############################################################
+
+ENDDOCUMENT();

@@ -1,0 +1,65 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('mgf; Poisson; sum')
+
+## DBsubject(Probability)
+## DBchapter(mgf)
+## DBsection(continuous)
+## level(2)
+## Date(2021/10/29)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(3)
+## TitleText1('Foundations and Applications of Statistics')
+## AuthorText1('Randall Pruim')
+## EditionText1('2')
+## Section1('3')
+## Problem1('3.66')
+
+########################################################################
+
+DOCUMENT();      
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+
+##############################################################
+#  Question in Text
+##############################################################
+Context()->texStrings;
+
+
+BEGIN_PGML
+
+Suppose [`X`] and [`Y`] are independent random variables with 
+[`X \sim {\sf Gamma}(\alpha, \lambda_1) `] and 
+[`Y \sim {\sf Gamma}(\alpha, \lambda_2) `].  
+Is [`X + Y`] a Gamma random variable?  If so, what are the shape and rate parameters?
+
+Note: use A, L1, and L2 instead of [`\alpha`], [`\lambda_1`], and [`\lambda_2`] in
+your answer.  If the distribution is not Gamma, enter 0's for each.
+
+shape: [____________________]{fun_cmp('0', vars => ['A1', 'L1', 'L2'])}
+
+rate: [____________________]{fun_cmp('0', vars => ['A1', 'L1', 'L2'])}
+
+END_PGML
+##############################################################
+
+ENDDOCUMENT();

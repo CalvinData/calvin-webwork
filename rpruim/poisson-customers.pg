@@ -1,0 +1,122 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('Poisson')
+
+## level(2)
+## DBsubject(Probability)
+## DBchapter(Discrete Distributions)
+## DBsection(Poisson)
+## Date(2021/10/01)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(2)
+## TitleText1('No Text')
+## AuthorText1('Randall Pruim')
+## EditionText1('2')
+## Section1('2 - Discrete Distributions')
+## Problem1('2.90')
+
+########################################################################
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.002);
+
+
+# Randomly generate some geometric sums
+
+
+rserve_eval('
+rate <- sample(4:12, 1);
+hour <- sample(9:11, 1);
+next_hour <- hour + 1;
+minute <- sample(seq(15, 50, by = 5), 1);
+shift_hours <- sample(3:5, 1);
+lo <- round(rate * shift_hours, -1);
+hi <- round(rate * shift_hours * 2, -1);
+ans <- c();
+ans[1] <- dpois(0, rate * minute/60);
+ans[2] <- dpois(2, rate * minute/60);
+ans[3] <- dpois(rate, rate);
+ans[4] <- ppois(rate - 1, rate);
+ans[5] <- 1 - ppois(rate, rate);
+ans[6] <- ppois(hi, rate * shift_hours) - ppois(lo - 1, rate * shift_hours);
+1');
+
+
+
+@ans = rserve_eval('ans');
+$ans = join ", ", @ans;
+@rate = rserve_eval('rate');
+@hour = rserve_eval('hour');
+@next_hour = rserve_eval('next_hour');
+@minute = rserve_eval('minute');
+@shift_hours = rserve_eval('shift_hours');
+@lo = rserve_eval('lo');
+@hi = rserve_eval('hi');
+
+##############################################################
+
+
+
+
+##############################################################
+#  Question in Text
+##############################################################
+Context()->texStrings;
+BEGIN_PGML
+
+Customers arrive at a certain buisiness at a rate of [$rate[0]] per hour.
+Assuming a Poisson model for their arrival, answer the following questions.
+
+a) [_________]{$ans[0]}
+What is the probability that no customers come between
+[$hour[0]]:00 and [$hour[0]]:[$minute[0]]?
+
+b) [_________]{$ans[1]}
+What is the probability that exactly two customers come between
+[$hour[0]]:00 and [$hour[0]]:[$minute[0]]?
+
+c) [_________]{$ans[2]}
+What is the probability that exactly [$rate[0]] customers arrive between
+[$hour[0]]:00 and [$next_hour[0]]:00?
+
+d) [_________]{$ans[3]}
+What is the probability that fewer than [$rate[0]] customers arrive between
+[$hour[0]]:00 and [$next_hour[0]]:00?
+
+e) [_________]{$ans[4]}
+What is the probability that more than [$rate[0]] customers arrive between
+[$hour[0]]:00 and [$next_hour[0]]:00?
+
+f) [_________]{$ans[5]}
+Sam is working a [$shift_hours[0]] hour shift.  What is the probability
+that between [$lo[0]] and [$hi[0]] (inclusive) customers come during this shift?
+
+
+END_PGML
+##############################################################
+
+ENDDOCUMENT();

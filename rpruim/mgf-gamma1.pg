@@ -1,0 +1,53 @@
+##DESCRIPTION
+## Tagged by rjp
+
+## DBsubject(Probability)
+## DBchapter(Distributions)
+## DBsection(mgf)
+## Date(10/27/21)
+## Static(1)
+## KEYWORDS('Gamma')
+
+##ENDDESCRIPTION
+
+&DOCUMENT;
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl"
+);
+ 
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 1;
+
+BEGIN_TEXT;
+Suppose \(X\) and \(Y\) are independent random variables with 
+\(X \sim {\sf Gamma}(\alpha_1, \lambda) \) and 
+\(Y \sim {\sf Gamma}(\alpha_2, \lambda) \).  Is \(X + Y\) a Gamma random
+variable?  If so, what are the shape and rate paramters?
+
+$PAR
+
+Note: use A1, A2, and L instead of \(\alpha_1\), \(\alpha_2\), and \(\lambda\) in
+your answer.  If the distribution is not Gamma, enter 0 in both blanks.
+
+$BR $BR
+shape: \{ANS_RULE(1,40) \}
+$BR $BR
+END_TEXT
+$ans = "A1 + A2";
+
+ANS(fun_cmp($ans, vars=>['A1', 'A2', 'L']));
+
+BEGIN_TEXT
+rate: \{ANS_RULE(1,40) \}
+$BR $BR
+END_TEXT
+$ans = "L";
+
+ANS(fun_cmp($ans, vars=>['A1', 'A2', 'L']));
+
+
+
+&ENDDOCUMENT;

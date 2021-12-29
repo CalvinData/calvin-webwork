@@ -1,0 +1,131 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('Poisson')
+
+## level(2)
+## DBsubject(Probability)
+## DBchapter(Continuous Distributions)
+## DBsection(Normal)
+## Date(2021/10/29)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(2)
+## TitleText1('Foundations and Applications of Statistics')
+## AuthorText1('Randall Pruim')
+## EditionText1('2')
+## Section1('3 - Continuous Distributions')
+## Problem1('3.62)
+
+########################################################################
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.002);
+
+
+$radio = RadioButtons(
+["Ralph","Claudia","neither, they both have the same probability"],
+"Claudia", # correct answer
+last => ["neither, they both have the same probability"], # can be a list
+);
+
+
+rserve_eval('
+ralph_mean <- 100;
+claudia_mean <- 110;
+ralph_sd <- 20;
+claudia_sd <- 15;
+ralph_z <- (150 - ralph_mean) / ralph_sd;
+claudia_z <- (150 - claudia_mean) / claudia_sd;
+
+higher_prob <- c(0, 2, 1)[ralph_z - claudia_z + 2]
+
+ans_b <- 1- pnorm(0, ralph_mean - claudia_mean, sqrt(ralph_sd^2 + claudia_sd^2));
+ans_c <- 1 - pnorm(0, 3 * ralph_mean - 3 * claudia_mean, sqrt(3 * ralph_sd^2 + 3*claudia_sd^2));
+ans_d <- 1 - pbinom(1, 3, ans_b);
+1');
+
+
+@higher_prob = rserve_eval('higher_prob');
+@ans_b = rserve_eval('ans_b');
+@ans_c = rserve_eval('ans_c');
+@ans_d = rserve_eval('ans_d');
+@ralph_mean = rserve_eval('ralph_mean');
+@claudia_mean = rserve_eval('claudia_mean');
+@ralph_sd = rserve_eval('ralph_sd');
+@claudia_sd = rserve_eval('claudia_sd');
+
+
+$radio = RadioButtons(
+["Ralph","Claudia","neither, they both have the same probability"],
+$higher_prob[0], # correct answer
+last => ["neither, they both have the same probability"], # can be a list
+);
+
+
+
+
+##############################################################
+
+
+
+
+##############################################################
+#  Question in Text
+##############################################################
+Context()->texStrings;
+BEGIN_PGML
+
+Ralph and Claudia are playing a game in which the higher score wins.
+Ralph's scores are (approximately) normally distributed with a mean of [$ralph_mean[0]] and a 
+standard deviation of [$ralph_sd[0]].
+Claudia's scores are approximately normally distributed with a mean of [$claudia_mean[0]] and a 
+standard deviation of [$claudia_sd[0]].
+
+
+a) Who is more likely to score above 150?
+
+    [_]{$radio}
+
+b) [_______________]{$ans_b[0]}
+Assuming their scores are independent, what is the (approximate) probability that Ralph beats Claudia?
+
+c) [_______________]{$ans_c[0]}
+Now suppose they play three games and declare the winner to be the person who gets the highest total
+score for the three games together.  What is the (approximate) probability that Ralph beats Claudia in 
+this format?
+
+d) [_______________]{$ans_d[0]}
+One more change.  This time they play three games and the winner is the one who wins at least two 
+of the three.  What is the (approximate) probability that Ralph eats Claudia in this format?
+
+
+
+
+
+END_PGML
+##############################################################
+
+ENDDOCUMENT();

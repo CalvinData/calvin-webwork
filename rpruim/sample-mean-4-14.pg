@@ -1,0 +1,84 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('Poisson')
+
+## level(2)
+## DBsubject(Probability)
+## DBchapter(Continuous Distributions)
+## DBsection(Normal)
+## Date(2021/10/29)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(2)
+## TitleText1('Foundations and Applications of Statistics')
+## AuthorText1('Randall Pruim')
+## EditionText1('2')
+## Section1('4 - Estimation and Testing')
+## Problem1('4.14')
+
+########################################################################
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+
+rserve_eval('
+n <- 25;
+sd <- 10;
+delta <- 3;
+ans <- pnorm(3, 0, sd / sqrt(n)) - pnorm(-3, 0, sd/sqrt(n));
+1');
+
+
+@ans = rserve_eval('ans');
+@n = rserve_eval('n');
+@sd = rserve_eval('sd');
+@delta = rserve_eval('delta');
+
+
+
+##############################################################
+
+
+
+
+##############################################################
+#  Question in Text
+##############################################################
+Context()->texStrings;
+BEGIN_PGML
+
+Suppose we use iid random sampling to obtain a sample of size [$n[0]] from a normal population with standard 
+deviation [$sd[0]].  What is the probability that our sample mean will be with [$delta[0]] of the population mean?
+
+[__________]{$ans[0]}
+
+
+
+END_PGML
+##############################################################
+
+ENDDOCUMENT();

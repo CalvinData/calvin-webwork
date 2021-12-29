@@ -1,0 +1,99 @@
+## DESCRIPTION
+## Computing residuals for simple models
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Models)
+## DBsection(Residuals)
+## Date(12/29/2021)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## TitleText1('Statistical Modeling: A Fresh Approach')
+## AuthorText1('Daniel T Kaplan')
+## EditionText1('2')
+## Section1('3 - Simple Models')
+## KEYWORDS('models', 'residuals', 'groupwise')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+
+rserve_eval('
+  library(tidyr); library(dplyr); library(kableExtra);
+  GDP <- read.csv("https://calvin-mgmt535.netlify.app/data/GDP.csv") |>
+                 filter(region != "World") |>
+                 filter( !is.na(imf_estimate)) |>
+                 rename(GDP = imf_estimate)
+  ');
+
+rserve_eval('
+  summary_table <-
+    bind_rows(
+      GDP |> group_by(region) |> summarise(mean_GDP = mean(GDP)),
+      GDP |> summarise(mean_GDP = mean(GDP)) |> mutate(region = "Overall")
+  );
+
+  r <- sample(nrow(GDP), 1);
+  random_country <-
+    GDP[r, ]|> select(country, region, GDP);
+
+  html_table <-
+    function(x) {
+      x |> kbl(format = "html") |> kable_styling(full_width = FALSE) |> as.character()
+    };
+
+
+  model1 <- lm(GDP ~ 1, data = GDP);
+  model2 <- lm(GDP ~ region, data = GDP);
+  ');
+
+($summary_table) = rserve_eval('summary_table |> html_table()');
+
+($country_info) = rserve_eval('random_country |> html_table()');
+
+($country) = rserve_eval('GDP[r, "country"]');
+($resid1) = rserve_eval('resid(model1)[r]');
+($resid2) = rserve_eval('resid(model2)[r]');
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+The IMF 2021 GDP estimates for 196 countries are summarized in the following table
+
+[$summary_table]*
+
+Use this information to calculate residuals for [$country] based
+on an "all-cases-the-same" model and a groupwise model.
+
+[$country_info]*
+
+a) residual in the all-cases-the-same model: [___]{$resid1}{15}
+
+b) residual in the groupwise model: [___]{$resid2}{15}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
