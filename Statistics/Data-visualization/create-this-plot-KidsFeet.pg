@@ -79,7 +79,7 @@ $my_cmp2 = String($ans2)->cmp(
 
 
 # Create the plots
-$img1 = rserve_start_plot('png');
+$img1 = rserve_start_plot('png', 400, 250);
 
 rserve_eval('
   library(ggformula);
@@ -90,7 +90,7 @@ rserve_eval('
 
 $image_path1 = rserve_finish_plot($img1);
 
-$img2 = rserve_start_plot('png');
+$img2 = rserve_start_plot('png', 400, 250);
 
 rserve_eval('
   library(ggformula);
@@ -115,14 +115,14 @@ just give the code to make the basic plot.)
 
 **Plot 1:**
 
-[@ image($image_path1, width=>400, height=>400) @]*
+[@ image($image_path1, width=>400, height=>250) @]*
 
 R code: [____________________________________________________]{$my_cmp1}
 
 
 **Plot 2:**
 
-[@ image($image_path2, width=>400, height=>400) @]*
+[@ image($image_path2, width=>400, height=>250) @]*
 
 R code: [____________________________________________________]{$my_cmp2}
 

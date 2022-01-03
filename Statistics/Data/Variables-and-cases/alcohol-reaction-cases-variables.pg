@@ -145,7 +145,7 @@ $summary_cmp = String($summary_cmd)->cmp(
 
 
 # Create the plot
-$img = rserve_start_plot('png');
+$img = rserve_start_plot('png', 400, 250);
 
 # $plot1 = 'gf_histogram(~eruptions, data = faithful)';
 
@@ -219,7 +219,7 @@ and the second data set **Drinks2**.
 
 **e.** Show the R command to create this plot.
 
-[@ image($image_path, width=>400, height=>400) @]*
+[@ image($image_path, width=>400, height=>250) @]*
 
 R code: [______________________________________________________________]{$plot1_cmp}
 
