@@ -64,15 +64,15 @@ rserve_eval('
 ');
 
 ($data1) = rserve_eval('
-  knitr::kable(Drinks1, format = "html") |>
-    capture.output() |>
-    paste(collapse = " ");
+  knitr::kable(Drinks1) |>
+    kableExtra::kable_styling(full_width = FALSE) |>
+    as.character()
   ');
 
 ($data2) = rserve_eval('
-  knitr::kable(Drinks2 |> head(6), format = "html") |>
-    capture.output() |>
-    paste(collapse = " ");
+  knitr::kable(Drinks2 |> head(6)) |>
+  kableExtra::kable_styling(full_width = FALSE) |>
+  as.character()
   ');
 
 $radio1 = RadioButtons(
@@ -120,7 +120,9 @@ $plot1 = 'gf_line(reaction_time ~ drinks, color = ~ subject, data = Drinks2)';
 $summary_cmd = 'df_stats(reaction_time ~ drinks, data = Drinks2, mean, median, sd)';
 
 ($summary) = rserve_eval('
-  knitr::kable(' . $summary_cmd . ', format = "html");
+  knitr::kable(' . $summary_cmd . ') |>
+  kableExtra::kable_styling(full_width = FALSE) |>
+  as.character();
   ');
 
 

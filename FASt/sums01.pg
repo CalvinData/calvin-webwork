@@ -9,7 +9,7 @@
 ## DBchapter(Prerequisites)
 ## DBsection(Sum Notation)
 ## Date(2018/09/02)
-## Institution(Calvin University)
+## Institution(Calvin College)
 ## Author(Randall Pruim)
 ## Level(3)
 ## TitleText1('No Text')
@@ -20,7 +20,7 @@
 
 ########################################################################
 
-DOCUMENT();
+DOCUMENT();      
 
 loadMacros(
   "PGstandard.pl",
@@ -43,10 +43,15 @@ TEXT(beginproblem());
 ##############################################################
 Context->("Numeric");
 
+# Do this in R
+rserve_start();
+
 # Randomly generate parameters: a and b; compute sum_{i=a}^b 2i
 rserve_eval(
-'lo <- sample(3:6, 3, replace = TRUE);
-hi <- lo + sample(3:5, 3, replace = TRUE);
+'
+library(mosaic);
+lo <- resample(3:6, 3);
+hi <- lo + resample(3:5, 3);
 ans <- integer(3);
 ans[1] <- sum(sapply(seq(lo[1], hi[1], by = 1), function(i) i^2));
 ans[2] <- sum(sapply(seq(lo[2], hi[2], by = 1), function(i) i));
@@ -62,6 +67,7 @@ $lo = join ", ", @lo;
 @ans = rserve_eval('ans');
 $ans = join ", ", @ans;
 
+rserve_finish();
 ##############################################################
 
 
@@ -73,7 +79,7 @@ $ans = join ", ", @ans;
 Context()->texStrings;
 BEGIN_PGML
 
-Evaluate the following sums:
+Evaluate the following sums: 
 
 a) [``\sum_{i=[$lo[0]]}^{[$hi[0]]} i^2``]    = [_________]{$ans[0]}
 
