@@ -14,7 +14,7 @@ WebWork problems authored by Calvin University faculty
   * `FASt` for problems from Foundations and Applicaitons of Statistics
   * optionally add the chapter/section   
 * Use lower case and hypens for pg file names (`expected-value-suits.pg`)
-* Place modifications of existing OPL or Contrib prolbems in `Modified`
+* Place modifications of existing OPL or Contrib prolbems in `Modified`???  (Not sure if this is a good idea or not.  But it probably is a good idea to retain the original filename so it is easier to identify where the problem originated.)
 * If you modify an existing `00Calvin` problem, add your initials
   * `some-problem-rjp.pg`
   * This will keep things from breaking in someone else's assignment mid-semester.
