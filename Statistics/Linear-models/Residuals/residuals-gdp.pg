@@ -13,7 +13,7 @@
 ## AuthorText1('Daniel T Kaplan')
 ## EditionText1('2')
 ## Section1('3 - Simple Models')
-## KEYWORDS('models', 'residuals', 'groupwise')
+## KEYWORDS('models', 'residuals', 'group-wise mean model')
 
 
 ###########################
@@ -84,13 +84,13 @@ The IMF 2021 GDP estimates for 196 countries are summarized in the following tab
 [$summary_table]*
 
 Use this information to calculate residuals for [$country] based
-on an "all-cases-the-same" model and a groupwise model.
+on an "all-cases-the-same" model and a group-wise mean model.
 
 [$country_info]*
 
 a) residual in the all-cases-the-same model: [___]{$resid1}{15}
 
-b) residual in the groupwise model: [___]{$resid2}{15}
+b) residual in the group-wise mean model: [___]{$resid2}{15}
 
 END_PGML
 
