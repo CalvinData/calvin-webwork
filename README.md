@@ -4,13 +4,20 @@ WebWork problems authored by Calvin University faculty
 
 ## File and Directory Conventions
 
-* CamelCase for directories
-  * top level to indicate subject area (`Statistics`, `Probability`, `LinearAlgebra`, `MachineLearning`, etc.)
-  * add subdirectories to refine (`Statistics/HypothesisTests`, `Statistics/Residuals`, etc.)
-  * Could create top-level directories to mirror structure of textbooks (`FASt`)
-    * add subdirectories for chapters or other subunits of the book
-  
-* Use hypens for pg file names (`expected-value-suits.pg`)
+* Mimic [taxonomy used in WebWorK's OPL](https://raw.githubusercontent.com/openwebwork/webwork-open-problem-library/master/OpenProblemLibrary/Taxonomy2)
+  * Subject/Chapter/Section/problem.pg
+* Replace spaces with hyphens in directory names
+  * `Statistics/Discrete-distibutions/Binomial/`
+* Add additional folders as need when taxonomy is deficient
+  * `Statistics/Discrete-distibutions/Identifying/`
+* Could replace top level with something indicating connection to a text book
+  * `FASt` for problems from Foundations and Applicaitons of Statistics
+  * optionally add the chapter/section   
+* Use lower case and hypens for pg file names (`expected-value-suits.pg`)
+* Place modifications of existing OPL or Contrib prolbems in `Modified`
+* If you modify an existing `00Calvin` problem, add your initials
+  * `some-problem-rjp.pg`
+  * This will keep things from breaking in someone else's assignment mid-semester.
 
 ## Problem authoring advice
 
@@ -27,5 +34,5 @@ WebWork problems authored by Calvin University faculty
   * [Submitting to OPL](https://webwork.maa.org/wiki/Submitting_problems_to_the_OPL)
   
 * [Using R in problems](https://webwork.maa.org/wiki/R_in_WeBWorK#Authoring_problems_with_R_code)
-  * Use **single quotes** around code sent to `rserve_eval()` to avoid interpolation
-  of strings in Perl.
+  * Use **single quotes** around code sent to `rserve_eval()` to avoid interpolation of strings in Perl.
+  * Use Perl concatenation (`'rnorm( '. $n . ')'`) or interpolation (`"rnorm($n)"`) to get Perl variables into R code -- but be careful about how `$` is used in R!
