@@ -1,6 +1,6 @@
 # calvin-webwork
 
-WebWork problems authored by Calvin University faculty
+WebWorK problems authored by Calvin University faculty
 
 ## File and Directory Conventions
 
