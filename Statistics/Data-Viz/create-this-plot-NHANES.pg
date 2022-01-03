@@ -46,7 +46,7 @@ Context()->flags->set(noLaTeXresults => 1);
 $RAllEqualChecker = sub {
      my ($correct, $student, $ansHash) = @_;  # get correct and student MathObjects
      my ($student_code) = $student->value;    # get student answer
-     rserve_eval("library(ggformula); library(NHANES); library(mosaicData);");
+     rserve_eval("library(ggformula); library(NHANES);");
      my ($score) =
        rserve_eval("tryCatch(as.integer(isTRUE(all.equal( $correct, $student_code))), error = function(e) FALSE);");
      return $score;
@@ -67,8 +67,8 @@ $selection1 = random(0, $#plot_cmds);
 do { $selection2 = random(0, $#plot_cmds); } until ($selection1 != $selection2);
 
 # Select target plot
-$ans1 = plot_cmds[$selection1];
-$ans2 = plot_cmds[$selection2];
+$ans1 = $plot_cmds[$selection1];
+$ans2 = $plot_cmds[$selection2];
 
 $my_cmp1 = String($ans1)->cmp(
    checker => $RAllEqualChecker
@@ -84,25 +84,24 @@ $img1 = rserve_start_plot('png');
 
 rserve_eval('
   library(ggformula);
-  library(mosaicData);
   library(NHANES);
   theme_set(theme_bw(base_size = 15));
   print(' . $ans1 . ');
 ');
 
-$image_path = rserve_finish_plot($img1);
+$image_path1 = rserve_finish_plot($img1);
 
 $img2 = rserve_start_plot('png');
 
 rserve_eval('
   library(ggformula);
-  library(mosaicData);
   library(NHANES);
   theme_set(theme_bw(base_size = 15));
   print(' . $ans2 . ');
 ');
 
-$image_path = rserve_finish_plot($img2);
+$image_path2 = rserve_finish_plot($img2);
+
 
 
 ##############################################################
@@ -111,8 +110,10 @@ $image_path = rserve_finish_plot($img2);
 BEGIN_PGML
 
 
-The plots below were created using the  ```NHANES``` data set.
+The plots below were created using the **NHANES** data set.
 For each, provide R code that will create the plot.
+ (Do not adjust the theme or do other fancy things, just give the code
+ to make the basic plot.)
 
 **Plot 1:**
 
