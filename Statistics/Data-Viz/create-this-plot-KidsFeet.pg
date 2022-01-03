@@ -1,0 +1,133 @@
+## DESCRIPTION
+## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## ENDDESCRIPTION
+
+## KEYWORDS('ggformula')
+
+## level(2)
+## DBsubject(Statistics)
+## DBchapter(Graphics)
+## DBsection(ggformula)
+## Date(2021/12/28)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(2)
+## TitleText1('No Text')
+
+########################################################################
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "parserRadioButtons.pl",
+  "MathObjects.pl",
+  "parserMultiAnswer.pl",
+  "unionTables.pl",
+  "RserveClient.pl",
+  "PGcourse.pl",
+  "contextString.pl",
+  "contextArbitraryString.pl"
+);
+loadMacros("PGML.pl");
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+##############################################################
+#  Question and R Setup
+##############################################################
+Context->("ArbitraryString");
+Context()->flags->set(noLaTeXresults => 1);
+
+# Note use of perl interpolation with R code strings below
+
+$RAllEqualChecker = sub {
+     my ($correct, $student, $ansHash) = @_;  # get correct and student MathObjects
+     my ($student_code) = $student->value;    # get student answer
+     rserve_eval("library(ggformula); library(mosaicData);");
+     my ($score) =
+       rserve_eval("tryCatch(as.integer(isTRUE(all.equal( $correct, $student_code))), error = function(e) FALSE);");
+     return $score;
+   };
+
+# possible plots
+@plot_cmds = (
+  'gf_point(length ~ width, color = ~ sex, data = KidsFeet)',
+  'gf_violin(length ~ sex, data = KidsFeet)',
+  'gf_boxplot(length ~ sex, data = KidsFeet)',
+  'gf_bar(~ sex, data = KidsFeet)',
+  'gf_histogram(~ length, data = KidsFeet)',
+  );
+
+$selection1 = random(0, $#plot_cmds);
+
+do { $selection2 = random(0, $#plot_cmds); } until ($selection1 != $selection2);
+
+# Select target plot
+$ans1 = plot_cmds[$selection1];
+$ans2 = plot_cmds[$selection2];
+
+$my_cmp1 = String($ans1)->cmp(
+   checker => $RAllEqualChecker
+ );
+
+$my_cmp2 = String($ans2)->cmp(
+   checker => $RAllEqualChecker
+ );
+
+
+# Create the plots
+$img1 = rserve_start_plot('png');
+
+rserve_eval('
+  library(ggformula);
+  library(mosaicData);
+  library(NHANES);
+  theme_set(theme_bw(base_size = 15));
+  print(' . $ans1 . ');
+');
+
+$image_path = rserve_finish_plot($img1);
+
+$img2 = rserve_start_plot('png');
+
+rserve_eval('
+  library(ggformula);
+  library(mosaicData);
+  library(NHANES);
+  theme_set(theme_bw(base_size = 15));
+  print(' . $ans2 . ');
+');
+
+$image_path = rserve_finish_plot($img2);
+
+
+##############################################################
+#  Question in Text
+##############################################################
+BEGIN_PGML
+
+
+The plots below were created using the  ```KidsFeet``` data set.
+For each, provide R code that will create the plot.
+
+**Plot 1:**
+
+[@ image($image_path1, width=>400, height=>400) @]*
+
+R code: [____________________________________________________]{$my_cmp1}
+
+
+**Plot 2:**
+
+[@ image($image_path2, width=>400, height=>400) @]*
+
+R code: [____________________________________________________]{$my_cmp2}
+
+END_PGML
+
+##############################################################
+
+ENDDOCUMENT();

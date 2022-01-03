@@ -6,9 +6,9 @@
 
 ## level(2)
 ## DBsubject(Statistics)
-## DBchapter(Graphics)
+## DBchapter(Data visualization)
 ## DBsection(ggformula)
-## Date(2021/12/28)
+## Date(2021/01/03)
 ## Institution(Calvin University)
 ## Author(Randall Pruim)
 ## Level(2)
@@ -41,36 +41,68 @@ TEXT(beginproblem());
 Context->("ArbitraryString");
 Context()->flags->set(noLaTeXresults => 1);
 
-
 # Note use of perl interpolation with R code strings below
 
 $RAllEqualChecker = sub {
      my ($correct, $student, $ansHash) = @_;  # get correct and student MathObjects
      my ($student_code) = $student->value;    # get student answer
-     rserve_eval("library(ggformula); library(mosaicData);");
+     rserve_eval("library(ggformula); library(NHANES); library(mosaicData);");
      my ($score) =
        rserve_eval("tryCatch(as.integer(isTRUE(all.equal( $correct, $student_code))), error = function(e) FALSE);");
      return $score;
    };
 
-# Select target plot
-$ans = 'gf_point(length ~ width, data = KidsFeet)';
+# possible plots
+@plot_cmds = (
+  'gf_violin(Height ~ Gender, data = NHANES)',
+  'gf_violin(Gender ~ Height, data = NHANES)',
+  'gf_boxplot(Height ~ Gender, data = NHANES)',
+  'gf_boxplot(Gender ~ Height, data = NHANES)',
+  'gf_density(~ Height, fill = ~ Gender, data = NHANES)',
+  'gf_dens(~ Height, color = ~ Gender, data = NHANES)',
+  );
 
-$my_cmp = String($ans)->cmp(
+$selection1 = random(0, $#plot_cmds);
+
+do { $selection2 = random(0, $#plot_cmds); } until ($selection1 != $selection2);
+
+# Select target plot
+$ans1 = plot_cmds[$selection1];
+$ans2 = plot_cmds[$selection2];
+
+$my_cmp1 = String($ans1)->cmp(
    checker => $RAllEqualChecker
  );
 
-# Create the plot
-$img = rserve_start_plot('png');
+$my_cmp2 = String($ans2)->cmp(
+   checker => $RAllEqualChecker
+ );
+
+
+# Create the plots
+$img1 = rserve_start_plot('png');
 
 rserve_eval('
   library(ggformula);
   library(mosaicData);
+  library(NHANES);
   theme_set(theme_bw(base_size = 15));
-  print(' . $ans . ');
+  print(' . $ans1 . ');
 ');
 
-$image_path = rserve_finish_plot($img);
+$image_path = rserve_finish_plot($img1);
+
+$img2 = rserve_start_plot('png');
+
+rserve_eval('
+  library(ggformula);
+  library(mosaicData);
+  library(NHANES);
+  theme_set(theme_bw(base_size = 15));
+  print(' . $ans2 . ');
+');
+
+$image_path = rserve_finish_plot($img2);
 
 
 ##############################################################
@@ -78,11 +110,22 @@ $image_path = rserve_finish_plot($img);
 ##############################################################
 BEGIN_PGML
 
-[@ image($image_path, width=>400, height=>400) @]*
 
-What R code will create the plot above?
+The plots below were created using the  ```NHANES``` data set.
+For each, provide R code that will create the plot.
 
-[____________________________________________________]{$my_cmp}
+**Plot 1:**
+
+[@ image($image_path1, width=>400, height=>400) @]*
+
+R code: [____________________________________________________]{$my_cmp1}
+
+
+**Plot 2:**
+
+[@ image($image_path2, width=>400, height=>400) @]*
+
+R code: [____________________________________________________]{$my_cmp2}
 
 END_PGML
 
