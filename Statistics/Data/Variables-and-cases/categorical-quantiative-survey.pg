@@ -1,0 +1,100 @@
+## DESCRIPTION
+##  Statistics: Descriptive statistics
+## ENDDESCRIPTION
+
+## naw tagged this problem.
+
+## DBsubject(Statistics)
+## DBchapter(Data)
+## DBsection(Classifying data)
+## Date(1/03/2021)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(3)
+## KEYWORDS('statistics', 'categorical', 'quantitative')
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+  "PGML.pl",
+);
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 0;
+install_problem_grader(~~&std_problem_grader);
+
+# True false questions are a special case of a "select list"
+# Make a new select list
+
+$ma = new_select_list();
+
+# $ma now "contains" the select list object.
+# Insert some  questions and whether they are categorical or quantitative
+
+$ma->rf_print_q(~~&pop_up_list_print_q);
+
+$ma -> ra_pop_up_list( [
+  No_answer => "  ?",
+  Categorical => "Categorical",
+  Quantitative => "Quantitative"
+  );
+
+
+$ma -> qa ( # each entry has to end with a comma
+"Are you a US citizen",
+"Categorical",
+"What is your marital status",
+"Categorical
+"About how much time do you spend on homework each week?",
+"Quantitative",
+"How long (in minutes) is your commute to class?",
+"Quantitative",
+"What is your favorite breakfast cereal?",
+"Categorical",
+"What is the rank of your Statistics professor? (Adjunct Professort, Assistant Professor, Associate Professor, or Full Professor)",
+"Categorical",
+"How would you rate the availability of parking on campus? (Insufficient, Just about right, or Abundant)",
+"Categorical",
+"Where do you live? (In Grand Rapids; In Michigan, but not in Grand Rapids; in the Great Lakes States, but not in Michigan; in the US, but not in the Great Lakes States; or outside the US)",
+"Categorical",
+"How many siblings to you have?",
+"Quantitative",
+"What time do you usually go to sleep?",
+"Quantitative",
+"In what year were you born?",
+"Quantitative",
+"At what temperature do you set your thermostat in the winter? (degrees Fahrenheit)",
+"Quantitative",
+"How many miles to the gallon does your car get?",
+"Quantitative",
+"On a scale of 1-10 (10 being most satistied), how satisfied are you with the dining hall food?",
+"Categorical",
+"How much change (coins only) do you have on you at the moment?",
+"Quantitative",
+
+);
+
+# Choose five of the question and answer pairs at random.
+$ma ->choose(5);
+
+# Now print the text using $ma->print_q for the questions
+# and $ma->print_a to print the answers.
+
+BEGIN_PGML
+
+Some students are preparing a survey to administer to other students.
+Below are some of the items they are considering for the survey.
+Indicate whether each item is should be classified as categorical or quantitative.
+
+[@ $ma-> print_q @]*
+
+END_PGML
+
+# Enter the correct answers to be checked against the answers to the students.
+
+ANS(str_cmp( $ma->ra_correct_ans )   ) ;
+COMMENT('Questions selected randomly from a larger set.  See source for full question list.');
+
+ENDDOCUMENT();        # This should be the last executable line in the problem.
