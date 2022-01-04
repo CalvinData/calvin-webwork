@@ -8,7 +8,7 @@ sub hash2seed {
   $seed = $seed * 62 + $nums{$_} foreach split(//, substr($hash, -5, 5));
   # warn("seed: " . $seed);
 
-  return seed;
+  return $seed;
 };
 
 1;
