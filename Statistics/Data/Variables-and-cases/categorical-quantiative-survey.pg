@@ -38,7 +38,8 @@ $ma->rf_print_q(~~&pop_up_list_print_q);
 $ma -> ra_pop_up_list( [
   No_answer => "  ?",
   Categorical => "Categorical",
-  Quantitative => "Quantitative"
+  Quantitative => "Quantitative",
+  ]
   );
 
 
@@ -46,7 +47,7 @@ $ma -> qa ( # each entry has to end with a comma
 "Are you a US citizen",
 "Categorical",
 "What is your marital status",
-"Categorical
+"Categorical",
 "About how much time do you spend on homework each week?",
 "Quantitative",
 "How long (in minutes) is your commute to class?",
