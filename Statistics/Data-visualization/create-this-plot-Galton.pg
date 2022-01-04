@@ -62,11 +62,11 @@ $ans1 = $plot_cmds[$selection1];
 $ans2 = $plot_cmds[$selection2];
 
 $my_cmp1 = String($ans1)->cmp(
-   checker => $RAllEqualChecker( precode => "library(ggformula); library(mosaicData);")
+   checker => RAllEqualChecker( precode => "library(ggformula); library(mosaicData);")
  );
 
 $my_cmp2 = String($ans2)->cmp(
-   checker => $RAllEqualChecker( precode => "library(ggformula); library(mosaicData);")
+   checker => RAllEqualChecker( precode => "library(ggformula); library(mosaicData);")
  );
 
 
