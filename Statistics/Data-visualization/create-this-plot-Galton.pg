@@ -71,8 +71,9 @@ $my_cmp2 = String($ans2)->cmp(
 
 
 # Create the plots
-$image_path1 = ggplot($ans1);
-$image_path2 = ggplot($ans2);
+
+$image_path1 = ggplot(code => $ans1, precode => 'library(mosaicData)');
+$image_path2 = ggplot(code => $ans2, precode => 'library(mosaicData)');
 
 
 ##############################################################
