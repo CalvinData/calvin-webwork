@@ -1,5 +1,5 @@
 ## DESCRIPTION
-## Problems for Foundations and Applications of Statistics (2nd ed.) by Randall Pruim
+## Write code for a ggformula or ggplto2 plot.
 ## ENDDESCRIPTION
 
 ## KEYWORDS('ggformula')
@@ -20,17 +20,16 @@ DOCUMENT();
 
 loadMacros(
   "PGstandard.pl",
+  "PGML.pl",
   "PGchoicemacros.pl",
-  "parserRadioButtons.pl",
   "MathObjects.pl",
   "parserMultiAnswer.pl",
-  "unionTables.pl",
   "RserveClient.pl",
   "PGcourse.pl",
   "contextString.pl",
-  "contextArbitraryString.pl"
+  "contextArbitraryString.pl",
+  "CalvinMacros.pl",
 );
-loadMacros("PGML.pl");
 
 # Print problem number and point value (weight) for the problem
 TEXT(beginproblem());
@@ -43,14 +42,6 @@ Context()->flags->set(noLaTeXresults => 1);
 
 # Note use of perl interpolation with R code strings below
 
-$RAllEqualChecker = sub {
-     my ($correct, $student, $ansHash) = @_;  # get correct and student MathObjects
-     my ($student_code) = $student->value;    # get student answer
-     rserve_eval("library(ggformula); library(mosaicData);");
-     my ($score) =
-       rserve_eval("tryCatch(as.integer(isTRUE(all.equal( $correct, $student_code))), error = function(e) FALSE);");
-     return $score;
-   };
 
 # possible plots
 @plot_cmds = (
@@ -71,37 +62,17 @@ $ans1 = $plot_cmds[$selection1];
 $ans2 = $plot_cmds[$selection2];
 
 $my_cmp1 = String($ans1)->cmp(
-   checker => $RAllEqualChecker
+   checker => $RAllEqualChecker( precode => "library(ggformula); library(mosaicData);")
  );
 
 $my_cmp2 = String($ans2)->cmp(
-   checker => $RAllEqualChecker
+   checker => $RAllEqualChecker( precode => "library(ggformula); library(mosaicData);")
  );
 
 
 # Create the plots
-$img1 = rserve_start_plot('png', 400, 250);
-
-rserve_eval('
-  library(ggformula);
-  library(mosaicData);
-  theme_set(theme_bw(base_size = 15));
-  print(' . $ans1 . ');
-');
-
-$image_path1 = rserve_finish_plot($img1);
-
-$img2 = rserve_start_plot('png', 400, 250);
-
-rserve_eval('
-  library(ggformula);
-  library(mosaicData);
-  theme_set(theme_bw(base_size = 15));
-  print(' . $ans2 . ');
-');
-
-$image_path2 = rserve_finish_plot($img2);
-
+$image_path1 = ggplot($ans1);
+$image_path2 = ggplot($ans2);
 
 
 ##############################################################
