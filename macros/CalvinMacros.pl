@@ -18,7 +18,7 @@ sub ggplot {
         'theme' => 'theme_bw(base_size = 15)',
         'width' => 400,
         'height' => 250,
-        'format' => 'png'
+        'format' => 'png',
         @_
     );
 
@@ -35,7 +35,6 @@ sub ggplot {
 };
 
 sub RAllEqualChecker = {
-
   my (%arg) = (
         'precode' => '',
         @_
