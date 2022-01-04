@@ -36,7 +36,7 @@ sub ggplot {
 };
 
 
-sub RAllEqualChecker = {
+sub RAllEqualChecker {
   my (%arg) = (
         'precode' => '',
         @_
