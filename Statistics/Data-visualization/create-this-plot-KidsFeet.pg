@@ -30,7 +30,7 @@ loadMacros(
   "PGML.pl",
   "contextString.pl",
   "contextArbitraryString.pl",
-  "CalvinMacros.pl',
+  "CalvinMacros.pl",
 );
 
 # Print problem number and point value (weight) for the problem

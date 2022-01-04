@@ -32,7 +32,7 @@ sub ggplot {
   );
 
   rserve_finish_plot($img);
-}
+};
 
 sub RAllEqualChecker = {
 
