@@ -35,7 +35,7 @@ library(tidyr);
 library(scales);
 library(ggformula);
 
-set.seed(' . $seeed . ');
+set.seed(' . $seed . ');
 
 G <-
   tibble(
