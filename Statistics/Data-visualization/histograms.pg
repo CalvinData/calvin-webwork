@@ -53,6 +53,15 @@ S <-
   df_stats( val ~ dist, data = G, median, mean, sd) |> mutate(d = mean - median);
 ');
 
+$plot_cmd = '
+G |> gf_dhistogram( ~ val, bins = 30, boundary = 0 ) |>
+  gf_facet_wrap( ~ dist, scales = "free_x") |>
+  gf_theme(axis.text.y = element_blank()) |>
+  gf_theme(axis.ticks.y = element_blank()) |>
+  gf_labs(y = "") |>
+  gf_lims(x = c(0, 100))
+';
+
 $img_path = ggplot(code => $plot_cmd, width => 600, height => 400);
 
 @ans1 = rserve_eval('LETTERS[which.max(S$mean)');
@@ -64,15 +73,6 @@ $img_path = ggplot(code => $plot_cmd, width => 600, height => 400);
 @ans7 = rserve_eval('LETTERS[which(S$d < 0.05)');
 @responses = rserve_eval('LETTERS[1:6]');
 
-
-$plot_cmd = '
-G |> gf_dhistogram( ~ val, bins = 30, boundary = 0 ) |>
-  gf_facet_wrap( ~ dist, scales = "free_x") |>
-  gf_theme(axis.text.y = element_blank()) |>
-  gf_theme(axis.ticks.y = element_blank()) |>
-  gf_labs(y = "") |>
-  gf_lims(x = c(0, 100))
-';
 
 $mc1 = new_checkbox_multiple_choice();
 $mc1 -> qa("Which distribtion has the largest mean?", @ans1);
