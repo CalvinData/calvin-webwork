@@ -79,7 +79,8 @@ S <-
 @ans5 = rserve_eval('S$dist[which(S$d > 0.05)]');
 @ans6 = rserve_eval('S$dist[which(S$d < - 0.05)]');
 @ans7 = rserve_eval('S$dist[which(S$d < - 0.05)]');
-@responses = rserve_eval('LETTERS[1:6]');
+@responses = rserve_eval('c(paste("Distribtion", LETTERS[1:6]), "None of the above")');
+
 
 
 $plot_cmd = '
@@ -106,7 +107,7 @@ $mc3 -> qa("Which distribtion has the largest standard deviation?", @ans3);
 $mc3 -> makeLast(@responses);
 
 $mc4 = new_checkbox_multiple_choice();
-$mc4 -> qa("Which distribtion has the smallest mean?", @ans4);
+$mc4 -> qa("Which distribtion has the smallest standard deviation?", @ans4);
 $mc4 -> makeLast(@responses);
 
 $mc5 = new_checkbox_multiple_choice();
