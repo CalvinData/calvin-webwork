@@ -27,11 +27,15 @@ TEXT(beginproblem());
 $showPartialCorrectAnswers = 0;
 install_problem_grader(~~&std_problem_grader);
 
+$seed = hash2seed($studentLogin);
+
 $pre_code = '
 library(dplyr);
 library(tidyr);
 library(scales);
 library(ggformula);
+
+set.seed(' . $seeed . ');
 
 G <-
   tibble(
