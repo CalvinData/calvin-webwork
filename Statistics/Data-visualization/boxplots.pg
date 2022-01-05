@@ -79,7 +79,7 @@ S <-
 @ans6 = rserve_eval('paste("Distribution", S$dist[which(S$d < - 0.05)])');
 @ans7 = rserve_eval('paste("Distribution", S$dist[which(S$d < - 0.05)])');
 @ans8 = ('None of the above');
-@responses = rserve_eval('c(paste("Distribtion", LETTERS[1:6]), "None of the above")');
+@responses = rserve_eval('c(paste("Distribution", LETTERS[1:6]), "None of the above")');
 
 
 $plot_cmd = '
