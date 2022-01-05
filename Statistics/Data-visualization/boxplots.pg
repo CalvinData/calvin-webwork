@@ -10,7 +10,7 @@
 ## Institution(Calvin University)
 ## Author(Randall Pruim)
 ## Level(3)
-## KEYWORDS('statistics', 'histogram', 'descriptive statistics')
+## KEYWORDS('statistics', 'boxplot', 'descriptive statistics')
 
 DOCUMENT();
 loadMacros(
@@ -35,7 +35,7 @@ library(tidyr);
 library(scales);
 library(ggformula);
 
-set.seed(' . $seed . ');
+set.seed(' . $seed . ' + 1);
 
 G <-
   tibble(
@@ -47,7 +47,7 @@ G <-
     F = qbeta(ppoints(500), 1.05, 1.05) |> rescale(c(0,100))
   ) |>
   dplyr::mutate(
-    C = c(tail(A, 250), tail(C, 250)) |> rescale(c(0, 100)),
+    A = c(tail(A, 250), tail(C, 250)) |> rescale(c(0, 100)),
     A = rescale(A, c(0, 100)),
     B = rescale(B, c(0, 100)),
     C = rescale(C, c(0, 100)),
@@ -79,17 +79,14 @@ S <-
 @ans5 = rserve_eval('S$dist[which(S$d > 0.05)]');
 @ans6 = rserve_eval('S$dist[which(S$d < - 0.05)]');
 @ans7 = rserve_eval('S$dist[which(S$d < - 0.05)]');
+@ans8 = ('None of the above');
 @responses = rserve_eval('c(paste("Distribtion", LETTERS[1:6]), "None of the above")');
 
 
-
 $plot_cmd = '
-G |> gf_dhistogram( ~ val, bins = 30, boundary = 0 ) |>
-  gf_facet_wrap( ~ dist, scales = "free_x") |>
-  gf_theme(axis.text.y = element_blank()) |>
-  gf_theme(axis.ticks.y = element_blank()) |>
-  gf_labs(y = "") |>
-  gf_lims(x = c(0, 100))
+G |> gf_boxplot(val ~ dist) |>
+  gf_labs(y = "", x = "") |>
+  gf_lims(y = c(0, 100))
 ';
 
 $image_path = ggplot(code => $plot_cmd, precode => $pre_code, width => 600, height => 400);
@@ -122,14 +119,18 @@ $mc7 = new_checkbox_multiple_choice();
 $mc7 -> qa("Which distribtions are skewed left?", @ans7);
 $mc7 -> makeLast(@responses);
 
+$mc8 = new_checkbox_multiple_choice();
+$mc8 -> qa("Which distribtions have outliers?", @ans8);
+$mc8 -> makeLast(@responses);
+
 
 BEGIN_PGML
 
-Below are histograms of 6 distribtions.
+Below are boxplots of 6 distribtions.
 
 [@ image($image_path, width => 600, height => 400) @]*
 
-Use the histograms to answer the following questions.
+Use the boxplots to answer the following questions.
 
 [@ $mc1-> print_q() @]*
 [@ $mc1-> print_a() @]*
@@ -153,6 +154,9 @@ Use the histograms to answer the following questions.
 [@ $mc7-> print_q() @]*
 [@ $mc7-> print_a() @]*
 
+[@ $mc8-> print_q() @]*
+[@ $mc8-> print_a() @]*
+
 [@ image($image_path, width => 600, height => 400) @]*
 
 END_PGML
@@ -166,6 +170,7 @@ ANS( checkbox_cmp( $mc4->correct_ans() ) );
 ANS( checkbox_cmp( $mc5->correct_ans() ) );
 ANS( checkbox_cmp( $mc6->correct_ans() ) );
 ANS( checkbox_cmp( $mc7->correct_ans() ) );
+ANS( checkbox_cmp( $mc8->correct_ans() ) );
 
 
 ##############################
