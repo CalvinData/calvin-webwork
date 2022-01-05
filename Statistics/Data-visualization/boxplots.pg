@@ -71,14 +71,13 @@ S <-
   df_stats( val ~ dist, data = G, median, mean, sd) |> dplyr::mutate(d = mean - median);
 ');
 
-
-@ans1 = rserve_eval('S$dist[which.max(S$mean)]');
-@ans2 = rserve_eval('S$dist[which.min(S$mean)]');
-@ans3 = rserve_eval('S$dist[which.max(S$sd)]');
-@ans4 = rserve_eval('S$dist[which.min(S$sd)]');
-@ans5 = rserve_eval('S$dist[which(S$d > 0.05)]');
-@ans6 = rserve_eval('S$dist[which(S$d < - 0.05)]');
-@ans7 = rserve_eval('S$dist[which(S$d < - 0.05)]');
+@ans1 = rserve_eval('paste("Distribution", S$dist[which.max(S$mean)])');
+@ans2 = rserve_eval('paste("Distribution", S$dist[which.min(S$mean)])');
+@ans3 = rserve_eval('paste("Distribution", S$dist[which.max(S$sd)])');
+@ans4 = rserve_eval('paste("Distribution", S$dist[which.min(S$sd)])');
+@ans5 = rserve_eval('paste("Distribution", S$dist[which(S$d > 0.05)])');
+@ans6 = rserve_eval('paste("Distribution", S$dist[which(S$d < - 0.05)])');
+@ans7 = rserve_eval('paste("Distribution", S$dist[which(S$d < - 0.05)])');
 @ans8 = ('None of the above');
 @responses = rserve_eval('c(paste("Distribtion", LETTERS[1:6]), "None of the above")');
 
