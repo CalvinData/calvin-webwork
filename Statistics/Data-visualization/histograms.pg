@@ -16,19 +16,22 @@ DOCUMENT();
 loadMacros(
   "PGstandard.pl",
   "PGchoicemacros.pl",
+  "PGanswermacros.pl",
   "PGcourse.pl",
   "PGML.pl",
-  "RserveClient.pl",
   "CalvinMacros.pl",
+  "RserveClient.pl",
 );
 
 TEXT(beginproblem());
 $showPartialCorrectAnswers = 0;
 install_problem_grader(~~&std_problem_grader);
 
-rserve_eval('
+$pre_code = '
 library(dplyr);
 library(tidyr);
+library(scales);
+library(ggformula);
 
 G <-
   tibble(
@@ -39,19 +42,41 @@ G <-
     E = qnorm(ppoints(500), 50, 10),
     F = qbeta(ppoints(500), 1.05, 1.05) |> rescale(c(0,100))
   ) |>
-  mutate(
+  dplyr::mutate(
     C = c(tail(A, 250), tail(C, 250)) |> rescale(c(0, 100)),
     A = rescale(A, c(0, 100)),
     B = rescale(B, c(0, 100)),
     C = rescale(C, c(0, 100)),
     D = rescale(D, c(0, 100))
   ) |>
-  setNames(sample(LETTERS[1:6]))  |>
-  pivot_longer(matches('*'),  names_to = "dist", values_to =  "val");
+  setNames(sample(LETTERS[1:6]));
 
+  G <-
+    tibble(
+      dist = rep(LETTERS[1:6], each = 500),
+      val = c(G$A, G$B, G$C, G$D, G$E, G$F)
+      );
+';
+
+
+rserve_eval($pre_code);
+
+rserve_eval('
+library(ggformula);
 S <-
-  df_stats( val ~ dist, data = G, median, mean, sd) |> mutate(d = mean - median);
+  df_stats( val ~ dist, data = G, median, mean, sd) |> dplyr::mutate(d = mean - median);
 ');
+
+
+@ans1 = rserve_eval('S$dist[which.max(S$mean)]');
+@ans2 = rserve_eval('S$dist[which.min(S$mean)]');
+@ans3 = rserve_eval('S$dist[which.max(S$sd)]');
+@ans4 = rserve_eval('S$dist[which.min(S$sd)]');
+@ans5 = rserve_eval('S$dist[which(S$d > 0.05)]');
+@ans6 = rserve_eval('S$dist[which(S$d < - 0.05)]');
+@ans7 = rserve_eval('S$dist[which(S$d < - 0.05)]');
+@responses = rserve_eval('LETTERS[1:6]');
+
 
 $plot_cmd = '
 G |> gf_dhistogram( ~ val, bins = 30, boundary = 0 ) |>
@@ -62,21 +87,11 @@ G |> gf_dhistogram( ~ val, bins = 30, boundary = 0 ) |>
   gf_lims(x = c(0, 100))
 ';
 
-$img_path = ggplot(code => $plot_cmd, width => 600, height => 400);
-
-@ans1 = rserve_eval('LETTERS[which.max(S$mean)');
-@ans2 = rserve_eval('LETTERS[which.min(S$mean)');
-@ans3 = rserve_eval('LETTERS[which.max(S$sd)');
-@ans4 = rserve_eval('LETTERS[which.min(S$sd)');
-@ans5 = rserve_eval('LETTERS[which(S$d > 0.05)');
-@ans6 = rserve_eval('LETTERS[which(S$d < 0.05)');
-@ans7 = rserve_eval('LETTERS[which(S$d < 0.05)');
-@responses = rserve_eval('LETTERS[1:6]');
-
+$image_path = ggplot(code => $plot_cmd, precode => $pre_code, width => 600, height => 400);
 
 $mc1 = new_checkbox_multiple_choice();
-$mc1 -> qa("Which distribtion has the largest mean?", @ans1);
-$mc1 -> makeLast(@responses);
+$mc1->qa("Which distribtion has the largest mean?", @ans1);
+$mc1->makeLast(@responses);
 
 $mc2 = new_checkbox_multiple_choice();
 $mc2 -> qa("Which distribtion has the smallest mean?", @ans2);
@@ -107,31 +122,31 @@ BEGIN_PGML
 
 Below are histograms of 6 distribtions.
 
-[@ image($image_path, width => 600, height => 400 @]*
+[@ image($image_path, width => 600, height => 400) @]*
 
 Use the histograms to answer the following questions.
 
-[@ $ma1-> print_q() @]*
-[@ $ma1-> print_a() @]*
+[@ $mc1-> print_q() @]*
+[@ $mc1-> print_a() @]*
 
 
-[@ $ma2-> print_q() @]*
-[@ $ma2-> print_a() @]*
+[@ $mc2-> print_q() @]*
+[@ $mc2-> print_a() @]*
 
-[@ $ma3-> print_q() @]*
-[@ $ma3-> print_a() @]*
+[@ $mc3-> print_q() @]*
+[@ $mc3-> print_a() @]*
 
-[@ $ma4-> print_q() @]*
-[@ $ma4-> print_a() @]*
+[@ $mc4-> print_q() @]*
+[@ $mc4-> print_a() @]*
 
-[@ $ma5-> print_q() @]*
-[@ $ma5-> print_a() @]*
+[@ $mc5-> print_q() @]*
+[@ $mc5-> print_a() @]*
 
-[@ $ma6-> print_q() @]*
-[@ $ma6-> print_a() @]*
+[@ $mc6-> print_q() @]*
+[@ $mc6-> print_a() @]*
 
-[@ $ma7-> print_q() @]*
-[@ $ma7-> print_a() @]*
+[@ $mc7-> print_q() @]*
+[@ $mc7-> print_a() @]*
 
 END_PGML
 
