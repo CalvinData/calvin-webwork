@@ -18,7 +18,7 @@ loadMacros(
   "PGchoicemacros.pl",
   "PGcourse.pl",
   "PGML.pl",
-  "RServeClient.pl",
+  "RserveClient.pl",
   "CalvinMacros.pl",
 );
 
@@ -26,9 +26,9 @@ TEXT(beginproblem());
 $showPartialCorrectAnswers = 0;
 install_problem_grader(~~&std_problem_grader);
 
-reserve_eval('
-library(dplyr)
-library(tidyr)
+rserve_eval('
+library(dplyr);
+library(tidyr);
 
 G <-
   tibble(
@@ -47,19 +47,10 @@ G <-
     D = rescale(D, c(0, 100))
   ) |>
   setNames(sample(LETTERS[1:6]))  |>
-  pivot_longer(matches('*'),  names_to = "dist", values_to =  "val")
+  pivot_longer(matches('*'),  names_to = "dist", values_to =  "val");
 
 S <-
-  df_stats( val ~ dist, data = G, median, mean, sd) |> mutate(d = mean - median)
-
-c(
-  LETTERS[which(S$d > 0)],  # mean > median
-  LETTERS[which(S$d < 0)],  # mean < median
-  LETTERS[which.max(S$mean)],  # largest mean
-  LETTERS[which.min(S$mean)],  # smallest mean
-  LETTERS[which.max(S$sd)],    # largest sd
-  LETTERS[which.min(S$sd)]    # smallest sd
-)
+  df_stats( val ~ dist, data = G, median, mean, sd) |> mutate(d = mean - median);
 ');
 
 $img_path = ggplot(code => $plot_cmd, width => 600, height => 400);
