@@ -1,0 +1,164 @@
+## DESCRIPTION
+##  Statistics: Descriptive statistics
+## ENDDESCRIPTION
+
+
+## DBsubject(Statistics)
+## DBchapter(Data visualization)
+## DBsection(Data visualization)
+## Date(1/04/2021)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(3)
+## KEYWORDS('statistics', 'histogram', 'descriptive statistics')
+
+DOCUMENT();
+loadMacros(
+  "PGstandard.pl",
+  "PGchoicemacros.pl",
+  "PGcourse.pl",
+  "PGML.pl",
+  "RServeClient.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+$showPartialCorrectAnswers = 0;
+install_problem_grader(~~&std_problem_grader);
+
+reserve_eval('
+library(dplyr)
+library(tidyr)
+
+G <-
+  tibble(
+    A = qgamma(ppoints(500), shape = 1.5),
+    B = qgamma(ppoints(500), shape = 4),
+    C = 10 - A,
+    D = 10 - B,
+    E = qnorm(ppoints(500), 50, 10),
+    F = qbeta(ppoints(500), 1.05, 1.05) |> rescale(c(0,100))
+  ) |>
+  mutate(
+    C = c(tail(A, 250), tail(C, 250)) |> rescale(c(0, 100)),
+    A = rescale(A, c(0, 100)),
+    B = rescale(B, c(0, 100)),
+    C = rescale(C, c(0, 100)),
+    D = rescale(D, c(0, 100))
+  ) |>
+  setNames(sample(LETTERS[1:6]))  |>
+  pivot_longer(matches('*'),  names_to = "dist", values_to =  "val")
+
+S <-
+  df_stats( val ~ dist, data = G, median, mean, sd) |> mutate(d = mean - median)
+
+c(
+  LETTERS[which(S$d > 0)],  # mean > median
+  LETTERS[which(S$d < 0)],  # mean < median
+  LETTERS[which.max(S$mean)],  # largest mean
+  LETTERS[which.min(S$mean)],  # smallest mean
+  LETTERS[which.max(S$sd)],    # largest sd
+  LETTERS[which.min(S$sd)]    # smallest sd
+)
+');
+
+$img_path = ggplot(code => $plot_cmd, width => 600, height => 400);
+
+@ans1 = rserve_eval('LETTERS[which.max(S$mean)');
+@ans2 = rserve_eval('LETTERS[which.min(S$mean)');
+@ans3 = rserve_eval('LETTERS[which.max(S$sd)');
+@ans4 = rserve_eval('LETTERS[which.min(S$sd)');
+@ans5 = rserve_eval('LETTERS[which(S$d > 0.05)');
+@ans6 = rserve_eval('LETTERS[which(S$d < 0.05)');
+@ans7 = rserve_eval('LETTERS[which(S$d < 0.05)');
+@responses = rserve_eval('LETTERS[1:6]');
+
+
+$plot_cmd = '
+G |> gf_dhistogram( ~ val, bins = 30, boundary = 0 ) |>
+  gf_facet_wrap( ~ dist, scales = "free_x") |>
+  gf_theme(axis.text.y = element_blank()) |>
+  gf_theme(axis.ticks.y = element_blank()) |>
+  gf_labs(y = "") |>
+  gf_lims(x = c(0, 100))
+';
+
+$mc1 = new_checkbox_multiple_choice();
+$mc1 -> qa("Which distribtion has the largest mean?", @ans1);
+$mc1 -> makeLast(@responses);
+
+$mc2 = new_checkbox_multiple_choice();
+$mc2 -> qa("Which distribtion has the smallest mean?", @ans2);
+$mc2 -> makeLast(@responses);
+
+$mc3 = new_checkbox_multiple_choice();
+$mc3 -> qa("Which distribtion has the largest standard deviation?", @ans3);
+$mc3 -> makeLast(@responses);
+
+$mc4 = new_checkbox_multiple_choice();
+$mc4 -> qa("Which distribtion has the smallest mean?", @ans4);
+$mc4 -> makeLast(@responses);
+
+$mc5 = new_checkbox_multiple_choice();
+$mc5 -> qa("Which distribtions have a mean that is clearly larger than the median?", @ans5);
+$mc5 -> makeLast(@responses);
+
+$mc6 = new_checkbox_multiple_choice();
+$mc6 -> qa("Which distribtions have a mean that is clearly smaller than the median?", @ans6);
+$mc6 -> makeLast(@responses);
+
+$mc7 = new_checkbox_multiple_choice();
+$mc7 -> qa("Which distribtions are skewed left?", @ans7);
+$mc7 -> makeLast(@responses);
+
+
+BEGIN_PGML
+
+Below are histograms of 6 distribtions.
+
+[@ image($image_path, width => 600, height => 400 @]*
+
+Use the histograms to answer the following questions.
+
+[@ $ma1-> print_q() @]*
+[@ $ma1-> print_a() @]*
+
+
+[@ $ma2-> print_q() @]*
+[@ $ma2-> print_a() @]*
+
+[@ $ma3-> print_q() @]*
+[@ $ma3-> print_a() @]*
+
+[@ $ma4-> print_q() @]*
+[@ $ma4-> print_a() @]*
+
+[@ $ma5-> print_q() @]*
+[@ $ma5-> print_a() @]*
+
+[@ $ma6-> print_q() @]*
+[@ $ma6-> print_a() @]*
+
+[@ $ma7-> print_q() @]*
+[@ $ma7-> print_a() @]*
+
+END_PGML
+
+##############################
+
+ANS( checkbox_cmp( $mc1->correct_ans() ) );
+ANS( checkbox_cmp( $mc2->correct_ans() ) );
+ANS( checkbox_cmp( $mc3->correct_ans() ) );
+ANS( checkbox_cmp( $mc4->correct_ans() ) );
+ANS( checkbox_cmp( $mc5->correct_ans() ) );
+ANS( checkbox_cmp( $mc6->correct_ans() ) );
+ANS( checkbox_cmp( $mc7->correct_ans() ) );
+
+
+##############################
+
+COMMENT('Uses R');
+
+ENDDOCUMENT();        # This should be the last executable line in the problem.
+
+
