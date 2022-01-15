@@ -36,6 +36,8 @@ sub ggplot {
     'print(' . $arg{'code'} . ');'
   );
 
+  warn('plot code executed');
+
   rserve_finish_plot($img);
   warn('plot finished');
 };
