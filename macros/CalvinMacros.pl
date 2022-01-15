@@ -30,11 +30,11 @@ sub ggplot {
     $arg{'precode'} . '; ' .
     'theme_set(' . $arg{'theme'} . ');' .
     'print(' . $arg{'code'} . ');' .
-    'sleep(0.5);'
+    'sleep(1);'
   );
 
   rserve_finish_plot($img);
-  sleep(0.5)
+  sleep(1)
 };
 
 
