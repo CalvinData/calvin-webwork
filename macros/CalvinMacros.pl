@@ -29,10 +29,12 @@ sub ggplot {
     'library(ggformula); ' .
     $arg{'precode'} . '; ' .
     'theme_set(' . $arg{'theme'} . ');' .
-    'print(' . $arg{'code'} . ');'
+    'print(' . $arg{'code'} . ');' .
+    'sleep(0.5);'
   );
 
   rserve_finish_plot($img);
+  sleep(0.5)
 };
 
 
