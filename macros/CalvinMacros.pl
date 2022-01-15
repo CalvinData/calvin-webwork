@@ -23,11 +23,7 @@ sub ggplot {
         @_
     );
 
-  warn("about to start");
-
   my $img = rserve_start_plot($arg{'format'}, $arg{'width'}, $arg{'height'});
-
-  warn("plot started");
 
   rserve_eval(
     'library(ggformula); ' .
@@ -36,10 +32,7 @@ sub ggplot {
     'print(' . $arg{'code'} . ');'
   );
 
-  warn('plot code executed');
-
   rserve_finish_plot($img);
-  warn('plot finished');
 };
 
 
