@@ -23,17 +23,23 @@ sub ggplot {
         @_
     );
 
+  warn("about to start");
+
   my $img = rserve_start_plot($arg{'format'}, $arg{'width'}, $arg{'height'});
+
+  sleep(1);
+
+  warn("plot started");
 
   rserve_eval(
     'library(ggformula); ' .
     $arg{'precode'} . '; ' .
     'theme_set(' . $arg{'theme'} . ');' .
     'print(' . $arg{'code'} . ');' .
-    'sleep(1);'
   );
 
   rserve_finish_plot($img);
+  warn('plot finished');
   sleep(1)
 };
 
