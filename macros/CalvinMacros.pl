@@ -33,7 +33,7 @@ sub ggplot {
     'library(ggformula); ' .
     $arg{'precode'} . '; ' .
     'theme_set(' . $arg{'theme'} . ');' .
-    'print(' . $arg{'code'} . ');' .
+    'print(' . $arg{'code'} . ');'
   );
 
   rserve_finish_plot($img);
