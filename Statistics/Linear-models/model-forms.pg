@@ -25,12 +25,11 @@ DOCUMENT();
 loadMacros(
   "PGstandard.pl",
   "MathObjects.pl",
-  "parserRadioButtons.pl",
-  "RserveClient.pl",
   "PGML.pl",
   "PGcourse.pl",
-  "contextString.pl",
-  "contextArbitraryString.pl"
+  "PGchoicemacros.pl",
+  "PGgraders.pl",
+  "unionTables.pl",
 );
 
 TEXT(beginproblem());
