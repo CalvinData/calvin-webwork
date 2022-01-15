@@ -4,17 +4,16 @@
 
 ## MO(1)
 ## DBsubject(Statistics)
-## DBchapter(Data)
-## DBsection(Variables and Cases)
-## Date(12/28/2021)
+## DBchapter(Linear Models)
+## DBsection(Model Forms)
+## Date(1/15/2022)
 ## Institution(Calvin University)
 ## Author(Randall Pruim)
 ## TitleText1('Statistical Modeling: A Fresh Approach')
 ## AuthorText1('Daniel T Kaplan')
 ## EditionText1('2')
-## Section1('2 - Rectangular Data')
-# problem 2.09 from old PDF
-## KEYWORDS('cases', 'variables', 'rectangular data')
+## Section1('7 - Model Formulas and Coefficients')
+## KEYWORDS('formula', 'linear model', 'model value', 'interaction')
 
 
 ###########################
