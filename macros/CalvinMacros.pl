@@ -27,8 +27,6 @@ sub ggplot {
 
   my $img = rserve_start_plot($arg{'format'}, $arg{'width'}, $arg{'height'});
 
-  sleep(1);
-
   warn("plot started");
 
   rserve_eval(
@@ -40,7 +38,6 @@ sub ggplot {
 
   rserve_finish_plot($img);
   warn('plot finished');
-  sleep(1);
 };
 
 
