@@ -40,7 +40,7 @@ sub ggplot {
 
   rserve_finish_plot($img);
   warn('plot finished');
-  sleep(1)
+  sleep(1);
 };
 
 
