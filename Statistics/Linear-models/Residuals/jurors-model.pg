@@ -64,7 +64,7 @@ rserve_eval('
 ($juror_info) = rserve_eval('random_row |> html_table()');
 
 ($resid) = rserve_eval('resid(model)[r]');
-($fit) = rserve_eval('resid(model)[r]');
+($fit) = rserve_eval('fitted(model)[r]');
 ($improvement) = rserve_eval('fitted(model)[27] - fitted(model)[1];');
 ($decrease) = rserve_eval('fitted(model)[1] - fitted(model)[26];');
 
