@@ -41,33 +41,32 @@ rserve_eval('
   library(tidyr); library(dplyr); library(kableExtra);
   library(Stat2Data); data(Jurors);
   Jurors <- Jurors |> mutate(When = ifelse(Year == 2000, "after", "before"));
-  model1 <- lm(PctReport ~ Period + When, data = Jurors);
+  model <- lm(PctReport ~ Period + When, data = Jurors);
   model2 <- lm(PctReport ~ Period * When, data = Jurors);
   ');
 
 rserve_eval('
   summary_table <-
-    model |> broom::tidy() |> select(term, estimate)
-  );
+    model |> broom::tidy() |> select(term, estimate);
 
   r <- sample(nrow(Jurors), 1);
-  random_row <- Jurors[r, ];
+  random_row <- Jurors[r, ] |> select(PctReport, Period, When)
 
   html_table <-
     function(x) {
       x |> kbl() |> kable_styling(full_width = FALSE) |> as.character()
     };
+    1;
   ');
 
 ($summary_table) = rserve_eval('summary_table |> html_table()');
 
 ($juror_info) = rserve_eval('random_row |> html_table()');
 
-($country) = rserve_eval('GDP[r, "country"]');
-($resid) = rserve_eval('resid(model1)[r]');
-($fit) = rserve_eval('resid(model1)[r]');
-($improvement_ = rserve_eval('fitted(model1)[27] - fitted(model1)[1];');
-($decrease) = rserve_eval('fitted(model)[1] - fitted(model1)[26];');
+($resid) = rserve_eval('resid(model)[r]');
+($fit) = rserve_eval('resid(model)[r]');
+($improvement) = rserve_eval('fitted(model)[27] - fitted(model)[1];');
+($decrease) = rserve_eval('fitted(model)[1] - fitted(model)[26];');
 
 
 ###########################
@@ -81,7 +80,7 @@ He wanted to know if his efforts were working, so he kept track of the
 percent of jurors who reported for duty for a full year before
 implementing the changes and then for a full year after.
 
-[@ image('jurors.png') @]*
+[@ image('jurors.png', width => 600, height => 400) @]*
 
 Since he knew that people are less likely to report later in the year
 and more likely to report earlier in the year, he decided to fit a model
@@ -103,9 +102,8 @@ a) model value: [______]{$fit}{10}
 b) residual: [______]{$resid}{10}
 
 According to this model, how much did the jury commisioner's efforts help?
-That is what percentage more people were reporting for jury duty
-*after* his intervention than before? (Use a negative number if things
-actually got worse, despite his efforts.)
+That is what percentage more people were reporting for jury duty in a given period
+of the year *after* his intervention than were reporting before? (Use a negative number if things actually got worse, despite his efforts.)
 
 c) improvement: [______]{$improvement}{10}
 
