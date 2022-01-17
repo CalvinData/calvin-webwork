@@ -1,0 +1,126 @@
+## DESCRIPTION
+## Matching model forms and plots
+## ENDDESCRIPTION/
+
+## MO(1)
+## DBsubject(Statistics)
+## DBchapter(Linear Models)
+## DBsection(Model Forms)
+## Date(1/15/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## TitleText1('Statistical Modeling: A Fresh Approach')
+## AuthorText1('Daniel T Kaplan')
+## EditionText1('2')
+## Section1('7 - Model Formulas and Coefficients')
+## KEYWORDS('formula', 'linear model', 'model value', 'interaction')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "PGchoicemacros.pl",
+  "PGgraders.pl",
+  "unionTables.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+#
+#  Create a matching list and use popups
+#
+$ml = new_match_list();
+$ml->rf_print_q(~~&pop_up_list_print_q);
+$ml->ra_pop_up_list([
+"No answer" => "?",
+"A" => "A", "B" => "B", "C" => "C",
+"D" => "D", "E" => "E", "F" => "F",
+"G" => "G", "H" => "H", "I" => "I",
+]);
+
+#
+#  Add correct questions and answers
+
+model1 <- lm(y ~ 1, data = Data)
+model2 <- lm(y ~ x + group, data = Data)
+model3 <- lm(y ~ x, data = Data)
+model4 <- lm(y ~ x * group, data = Data)
+model5 <- lm(y ~ group, data = Data)
+model6 <- lm(y ~ -1 + x, data = Data)
+#
+$ml->qa(
+"Graph 1", "y ~ 1",
+"Graph 2", "y ~ 1 + x + group",
+"Graph 3", "y ~ 1 + x",
+"Graph 4", "y ~ -1 + x",
+"Graph 5", "y ~ 1 + group",
+"Graph 6", "y ~ 1 + x * group",
+);
+$ml->choose(6);
+
+#
+#  Add extra incorrect answers
+#
+$ml->extra(
+"y ~ 1 + x:group",
+"y ~ -1 + x + group",
+);
+$ml->choose_extra(2);
+
+$ml->makeLast("None of the above");
+
+###########################
+#  Main text
+
+BEGIN_PGML
+Below are 6 plots. Each plot shows the same data set (points). The data has
+3 variables: quantiative variables y and x, and a categorical variable group
+with two levels.
+On each plot the model values of a model are shows as a line or lines.
+
+[@ image("model-forms.png", width => 600, height => 400) @]*
+
+Determine the model form for each.
+
+[@ ColumnMatchTable($ml) @]***
+
+END_PGML
+
+
+############################
+#  Answer evaluation
+
+$showPartialCorrectAnswers = 0;
+
+#
+#  Incremental grader
+#
+install_problem_grader(~~&custom_problem_grader_fluid);
+$ENV{'grader_numright'} = [3,4,5,6];
+$ENV{'grader_scores'} = [0.5,0.6,0.8,1];
+$ENV{'grader_message'} = "You can earn " .
+"partial credit if you get at least 3 correct.";
+
+
+#
+#  All or nothing grader
+#
+# install_problem_grader(~~&std_problem_grader);
+#
+
+ANS( str_cmp( $ml->ra_correct_ans ) );
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
