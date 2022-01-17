@@ -51,13 +51,6 @@ $ml->ra_pop_up_list([
 
 #
 #  Add correct questions and answers
-
-model1 <- lm(y ~ 1, data = Data)
-model2 <- lm(y ~ x + group, data = Data)
-model3 <- lm(y ~ x, data = Data)
-model4 <- lm(y ~ x * group, data = Data)
-model5 <- lm(y ~ group, data = Data)
-model6 <- lm(y ~ -1 + x, data = Data)
 #
 $ml->qa(
 "Graph 1", "y ~ 1",
