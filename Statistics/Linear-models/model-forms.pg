@@ -1,5 +1,5 @@
 ## DESCRIPTION
-## Cases and Variables (Alcohol reation Time study)
+## Matching model forms and plots
 ## ENDDESCRIPTION/
 
 ## MO(1)
@@ -53,12 +53,12 @@ $ml->ra_pop_up_list([
 #  Add correct questions and answers
 #
 $ml->qa(
-"Graph A", "y ~ 1",
-"Graph B", "y ~ 1 + x",
-"Graph C", "y ~ 1 + x + group",
-"Graph D", "y ~ 1 + group",
-"Graph E", "y ~ 1 + x * group",
-"Graph F", "y ~ -1 + x",
+"Graph 1", "y ~ 1",
+"Graph 2", "y ~ 1 + x",
+"Graph 3", "y ~ 1 + x + group",
+"Graph 4", "y ~ 1 + group",
+"Graph 5", "y ~ 1 + x * group",
+"Graph 6", "y ~ -1 + x",
 );
 $ml->choose(6);
 
