@@ -82,7 +82,7 @@ Below are 6 plots. Each plot shows the same data set (points). The data has
 with two levels.
 On each plot the model values of a model are shows as a line or lines.
 
-[@ image("model-forms-v2.png", width => 600, height => 400) @]*
+[@ image("model-forms-v3.png", width => 600, height => 400) @]*
 
 Determine the model form for each.
 
