@@ -38,49 +38,61 @@ TEXT(beginproblem());
 ###########################
 #  Setup
 
-Context->("numeric");
+Context->("Numeric");
 Context()->flags->set(tolerance => 0.01);
 
 $seed = hash2seed($studentLogin);
 
+rserve_eval('library(tidyr); library(dplyr);');
+rserve_eval('library(mosaic); library(Stat2Data);');
+rserve_eval('data(ThreeCars2017); 1;');
+rserve_eval("set.seed($seed); 1;");
+
 rserve_eval('
-  library(tidyr); library(dplyr); library(ggformula);
-  library(mosaic); library(Stat2Data);
-  data(ThreeCars2017);
-
-  set.seed($seed);
-
   Data <-
     ThreeCars2017 |>
-    filter(CarType != "Mazda6") |>
-    sample_frac(0.8) |>
-    select(type = CarType, age = Age, price = Price, mileage = Mileage);
+    dplyr::filter(CarType != "Mazda6") |>
+    dplyr::sample_frac(0.8) |>
+    dplyr::select(type = CarType, age = Age, price = Price, mileage = Mileage);
 
-  model <- lm(price ~ mileage * type, data = Data)
+  model <- lm(price ~ mileage * type, data = Data);
   model_f <- makeFun(model);
+  1;
   ');
 
 
-($rss) = rserve_eval('sum(resid(model)^2');
-($ssm) = rserve_eval('sum(fitted(model)^2');
+($rss) = rserve_eval('sum(resid(model)^2)');
+($ssm) = rserve_eval('sum((fitted(model) - mean(fitted(model)))^2)');
 $sst = $ssm + $rss;
 $rsquared = $ssm / $sst;
-$age = random(3, 7);
-$miles = 10000 * random(3, 7);
+$age = random(3, 8);
+$milesK = 10 * random(5, 12);
 $carType = "Maxima";
 $otherCarType = "Accord";
 
-($model_value) = rserve_eval('model_f(type = $carType, age = $age, mileage = $miles)');
+($model_value) = rserve_eval("model_f(type = '$carType', age = $age, mileage = $milesK) * 1000;");
 
-($model_value_diff) = rserve_eval('
-  model_f(type = $otherCarType, age = $age, mileage = $miles) -
-  model_f(type = $carType, age = $age, mileage = $miles);
-  ');
+($model_value_diff) = rserve_eval("
+  delta <-
+  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
+  model_f(type = '$carType', age = $age, mileage = $milesK);
+  1000 * delta;
+  ");
 
-($decrease_per_1000) = rserve_eval('
-  model_f(type = $otherCarType, age = $age, mileage = $miles) -
-  model_f(type = $carType, age = $age, mileage = $miles + 1000);
-');
+($decrease_per_10K) = rserve_eval("
+  delta <-
+  model_f(type = '$carType', age = $age, mileage = $milesK) -
+  model_f(type = '$carType', age = $age, mileage = $milesK + 10);
+  1000 * delta;
+");
+
+($other_decrease_per_10K) = rserve_eval("
+  delta <-
+  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
+  model_f(type = '$otherCarType', age = $age, mileage = $milesK + 10);
+  1000 * delta;
+");
+
 
 ($data_remote_file) = rserve_eval('
   filename <- "some-cars.csv";
@@ -97,28 +109,36 @@ $data_local_file = rserve_get_file($data_remote_file);
 BEGIN_PGML
 
 The CSV file linked below has some information about two types of
-car sampled from an online used car site.
+car sampled from an online used car site. The variables recorded
+are asking price (in 1000s of US dollars), mileage (in 1000s of miles),
+age (in years),
+and car type (Maxima or Accord).
+
 Use these data to fit a model for estimating the asking price from
-the age and type of the car, including an interaction term.
+the mileage and type of the car, including an interaction term.
 Then use your model to answer the questions below.
 
 [@ htmlLink($data_local_url, "Download CSV here.") @]*
 
-What is the model value for the price of a [$carType] with $miles miles?
+What is the model value *in dollars* for the price of a [$carType] with [$milesK],000 miles?
 
-* answer: [___]{$model_value}{10}
+* answer: $[___]{$model_value}{10}
 
-How much would the model value change if the car were an $otherCarType instead?
+How much would the model value change if the car were an [$otherCarType] instead?
 (Use a negative value if the model value would be less, a positive value if
 it would be more.)
 
-* difference in model values: [___]{$model_value_diff}{10}
+* difference in model values: $[___]{$model_value_diff}{10}
 
-Per 1000 miles driven, how much does this model think the price of
-a $carType decreases (in dollars)?
+Per 10,000 miles driven, how much does this model think the price of
+a [$carType] decreases (in dollars)?
 
-* answer: [___]{$decrease_per_1000}
+* answer: $[___]{$decrease_per_10K}{10}
 
+Per 10,000 miles driven, how much does this model think the price of
+an [$otherCarType] decreases (in dollars)?
+
+* answer: $[___]{$other_decrease_per_10K}{10}
 
 Compute the following values for this model:
 
