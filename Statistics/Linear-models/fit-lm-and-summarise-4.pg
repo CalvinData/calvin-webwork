@@ -74,7 +74,7 @@ $otherCarType = "Accord";
 
 ($model_value_diff) = rserve_eval("
   delta <-
-  model_f(type = '$OtherCarType', age = $age, mileage = $milesK) -
+  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
   model_f(type = '$carType', age = $age, mileage = $milesK);
   1000 * delta;
   ");
@@ -100,7 +100,8 @@ age (in years),
 and car type (Maxima or Accord).
 
 Use these data to fit a model for estimating the asking price from
-the age and type of the car, including an interaction term.
+the mileage, the age, and type of the car, including all the possible
+interaction terms.
 Then use your model to answer the questions below.
 
 [@ htmlLink($data_local_url, "Download CSV here.") @]*
