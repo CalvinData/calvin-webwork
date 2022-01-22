@@ -34,7 +34,7 @@ Context("Numeric");
 
 $radio = RadioButtons(
   ["resid(model)", "resid(model)^2", "sum(resid(model))", "sum(resid(model)^2)",
-  "sum(resid(model))^2", "sum(resid(mod^2))", "None of these"],
+  "sum(resid(model))^2", "sum(resid(model^2))", "None of these"],
   "sum(resid(model)^2)", # correct answer
   last => ["None of these"], # can be a list
 );
