@@ -1,0 +1,73 @@
+
+
+## KEYWORDS('residuals', 'r code')
+
+## DBsubject(Statistics)
+## DBchapter(Linear Models)
+## DBsection(Residuals)
+## Date(2022/01/22)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## Level(3)
+## TitleText1('No Text')
+
+########################################################################
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserRadioButtons.pl",
+  "PGcourse.pl",
+  "PGML.pl",
+);
+
+# Print problem number and point value (weight) for the problem
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context("Numeric");
+
+$radio = RadioButtons(
+  ["resid(model)", "resid(model)^2", "sum(resid(model))", "sum(resid(model)^2)",
+  "sum(resid(model))^2", "sum(resid(mod^2))", "None of these"],
+  "sum(resid(model)^2)", # correct answer
+  last => ["None of these"], # can be a list
+);
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+Which of these R commands will compute RSS, the sum of the squared residuals,
+for a linear model named [|model|]?
+
+[@ $radio->buttons() @]*
+END_PGML
+
+############################
+#  Answer evaluation
+
+install_problem_grader(~~&std_problem_grader);
+
+$showPartialCorrectAnswers = 0;
+
+ANS( $radio->cmp() );
+
+############################
+#  Solution
+
+BEGIN_PGML_SOLUTION
+The correct answer is [$radio->correct_ans()].
+END_PGML_SOLUTION
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
+
