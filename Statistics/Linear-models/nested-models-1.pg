@@ -1,5 +1,4 @@
 
-
 ## KEYWORDS('residuals', 'r code')
 
 ## DBsubject(Statistics)
@@ -37,50 +36,45 @@ Context("Numeric");
  "Model 2 will have a larger \(R^2\) than model 1.",
  "\(R^2\) will be the same for both models.",
  "It is not possible to tell which model will have the larger value of \(R^2\) from the information provided."
- ]
+ ];
 
 
 $radio1 = RadioButtons(
   @answers,
-  $answers[1],
+  1,
   last => @answers,
-  )
-);
+  );
+
 
 $radio2 = RadioButtons(
   @answers,
-  $answers[3],
+  3,
   last => @answers,
-  )
 );
 
 $radio3 = RadioButtons(
   @answers,
-  $answers[2],
+  2,
   last => @answers,
-  )
 );
 
 $radio4 = RadioButtons(
   @answers,
-  $answers[0],
+  0,
   last => @answers,
-  )
 );
 
 $radio5 = RadioButtons(
   @answers,
-  $answers[3],
+  3,
   last => @answers,
-  )
 );
 
 
 $radio6 = RadioButtons(
   @answers,
-  $answers[2],
+  2,
   last => @answers,
-  )
 );
 
 ###########################
@@ -88,53 +82,66 @@ $radio6 = RadioButtons(
 
 BEGIN_PGML
 
-For each pair of models, choose the correct statement about [`R^2`]
+For each pair of model formulas, choose the correct statement about [`R^2`], assuming both models are fit using the same data set.
 
 
-Model 1: ```y ~ x + a```
+Model formula 1:
+```y ~ x + a```
 
-Model 2: ```y ~ x * a```
+Model formula 2:
+```y ~ x * a```
+
 
 [@ $radio1->buttons() @]*
 
 ---
 
-Model 1: ```y ~ x + a```
+Model formula 1:
+```y ~ x + a```
 
-Model 2: ```y ~ x * b```
+Model formula 2:
+```y ~ x * b```
 
 [@ $radio2->buttons() @]*
 
 ---
 
-Model 1: ```y ~ x + a + x:a```
+Model formnula 1:
+```y ~ x + a + x:a```
 
-Model 2: ```y ~ x * a```
+Model formula 2:
+```y ~ x * a```
 
 
 [@ $radio3->buttons() @]*
 
 ---
 
-Model 1: ```y ~ 1 + x```
+Model formula 1:
+```y ~ 1 + x```
 
-Model 2: ```y ~ -1 + x```
+Model formula 2:
+```y ~ -1 + x```
 
 [@ $radio4->buttons() @]*
 
 ---
 
-Model 1: ```y ~ 1 + x```
+Model formula 1:
+```y ~ 1 + x```
 
-Model 2: ```y ~ -1 + x + a```
+Model formula 2:
+```y ~ -1 + x + a```
 
 [@ $radio5->buttons() @]*
 
 ---
 
-Model 1: ```y ~ x + a```
+Model formula 1:
+```y ~ x + a```
 
-Model 2: ```y ~ a + x```
+Model formula 2:
+```y ~ a + x```
 
 [@ $radio5->buttons() @]*
 END_PGML
@@ -152,6 +159,7 @@ ANS( $radio3->cmp() );
 ANS( $radio4->cmp() );
 ANS( $radio5->cmp() );
 ANS( $radio6->cmp() );
+
 
 ############################
 #  Solution
