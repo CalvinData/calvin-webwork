@@ -1,0 +1,157 @@
+## DESCRIPTION
+## Fit linear model and answer questions based on it.
+## ENDDESCRIPTION/
+
+## MO(1)
+## DBsubject(Statistics)
+## DBchapter(Linear Models)
+## DBsection(Fit and summarise)
+## Date(01/22/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## TitleText1('Statistical Modeling: A Fresh Approach')
+## AuthorText1('Daniel T Kaplan')
+## EditionText1('2')
+## KEYWORDS('linear model', 'fit', 'RSS' )
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserRadioButtons.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "contextString.pl",
+  "contextArbitraryString.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.01);
+
+$seed = hash2seed($studentLogin);
+
+rserve_eval('library(tidyr); library(dplyr);');
+rserve_eval('library(mosaic); library(Stat2Data);');
+rserve_eval('data(ThreeCars2017); 1;');
+rserve_eval("set.seed($seed); 1;");
+
+rserve_eval('
+  Data <-
+    ThreeCars2017 |>
+    dplyr::filter(CarType != "Mazda6") |>
+    dplyr::sample_frac(0.8) |>
+    dplyr::select(type = CarType, age = Age, price = Price, mileage = Mileage);
+
+  model <- lm(price ~ age * mileage, data = Data);
+  model_f <- makeFun(model);
+  1;
+  ');
+
+
+($rss) = rserve_eval('sum(resid(model)^2)');
+($ssm) = rserve_eval('sum((fitted(model) - mean(fitted(model)))^2)');
+$sst = $ssm + $rss;
+$rsquared = $ssm / $sst;
+$age = random(3, 8);
+$milesK = 10 * random(5, 12);
+$carType = "Maxima";
+$otherCarType = "Accord";
+
+($model_value) = rserve_eval("model_f(type = '$carType', age = $age, mileage = $milesK) * 1000;");
+
+($model_value_diff) = rserve_eval("
+  delta <-
+  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
+  model_f(type = '$carType', age = $age, mileage = $milesK);
+  1000 * delta;
+  ");
+
+($decrease_per_10K) = rserve_eval("
+  delta <-
+  model_f(type = '$carType', age = $age, mileage = $milesK) -
+  model_f(type = '$carType', age = $age, mileage = $milesK + 10);
+  1000 * delta;
+");
+
+($decrease_per_year) = rserve_eval("
+  delta <-
+  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
+  model_f(type = '$otherCarType', age = $age + 1, mileage = $milesK);
+  1000 * delta;
+");
+
+
+($data_remote_file) = rserve_eval('
+  filename <- "some-cars.csv";
+  readr::write_csv(Data, filename);
+  filename');
+
+$data_local_file = rserve_get_file($data_remote_file);
+
+($data_local_url = $data_local_file) =~ s|$tempDirectory|$tempURL|;
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+The CSV file linked below has some information about two types of
+car sampled from an online used car site. The variables recorded
+are asking price (in 1000s of US dollars), mileage (in 1000s of miles),
+age (in years),
+and car type (Maxima or Accord).
+
+Use these data to fit a model for estimating the asking price from
+the age and type of the car, including an interaction term.
+Then use your model to answer the questions below.
+
+[@ htmlLink($data_local_url, "Download CSV here.") @]*
+
+What is the model value *in dollars* for the price of a [$age]-year-old
+[$carType] with [$milesK],000 miles?
+
+* answer: $[___]{$model_value}{10}
+
+How much would the model value change if the car were an [$otherCarType] instead?
+(Use a negative value if the model value would be less, a positive value if
+it would be more.)
+
+* difference in model values: $[___]{$model_value_diff}{10}
+
+How less does this model think the price will be if a
+[$carType] of the same age has an additional 10,000 miles?
+
+* answer: $[___]{$decrease_per_10K}{10}
+
+How less does this model think the price will be if a
+[$carType] with the same mileage is an additional year older?
+
+* answer: $[___]{$decrease_per_10K}{10}
+Compute the following values for this model:
+
+* RSS for this model = [___]{$rss}{10}
+
+* SSM for this model = [___]{$ssm}{10}
+
+* SST for this model = [___]{$sst}{10}
+
+* [`R^2`] for this model = [___]{$rsquared}{10}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
