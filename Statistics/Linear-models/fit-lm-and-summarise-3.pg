@@ -70,26 +70,26 @@ $milesK = 10 * random(5, 12);
 $carType = "Maxima";
 $otherCarType = "Accord";
 
-($model_value) = rserve_eval("model_f(type = '$carType', age = $age, mileage = $milesK) * 1000;");
+($model_value) = rserve_eval("model_f(age = $age, mileage = $milesK) * 1000;");
 
 ($model_value_diff) = rserve_eval("
   delta <-
-  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
-  model_f(type = '$carType', age = $age, mileage = $milesK);
+  model_f(age = $age, mileage = $milesK) -
+  model_f(age = $age, mileage = $milesK);
   1000 * delta;
   ");
 
 ($decrease_per_10K) = rserve_eval("
   delta <-
-  model_f(type = '$carType', age = $age, mileage = $milesK) -
-  model_f(type = '$carType', age = $age, mileage = $milesK + 10);
+  model_f(age = $age, mileage = $milesK) -
+  model_f(age = $age, mileage = $milesK + 10);
   1000 * delta;
 ");
 
 ($decrease_per_year) = rserve_eval("
   delta <-
-  model_f(type = '$otherCarType', age = $age, mileage = $milesK) -
-  model_f(type = '$otherCarType', age = $age + 1, mileage = $milesK);
+  model_f(age = $age, mileage = $milesK) -
+  model_f(age = $age + 1, mileage = $milesK);
   1000 * delta;
 ");
 
@@ -131,15 +131,17 @@ it would be more.)
 
 * difference in model values: $[___]{$model_value_diff}{10}
 
-How less does this model think the price will be if a
+How much less does this model think the price will be if a
 [$carType] of the same age has an additional 10,000 miles?
 
 * answer: $[___]{$decrease_per_10K}{10}
 
-How less does this model think the price will be if a
+How much less does this model think the price will be if a
 [$carType] with the same mileage is an additional year older?
 
-* answer: $[___]{$decrease_per_10K}{10}
+* answer: $[___]{$decrease_per_year}{10}
+
+
 Compute the following values for this model:
 
 * RSS for this model = [___]{$rss}{10}
