@@ -115,7 +115,7 @@ age (in years),
 and car type (Maxima or Accord).
 
 Use these data to fit a model for estimating the asking price from
-the age and type of the car, including an interaction term.
+the age and mileage of the car, including an interaction term.
 Then use your model to answer the questions below.
 
 [@ htmlLink($data_local_url, "Download CSV here.") @]*
