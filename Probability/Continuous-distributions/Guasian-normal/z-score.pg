@@ -58,18 +58,21 @@ BEGIN_PGML
 
 Fill in the missing values.
 
+END_PGML
+
 
 TEXT(
   DataTable([
     ['mean', 'standard deviation', 'value', 'z-score'],
-    [PGML('[$mean[0]'), PGML('[$sd[0]'), [PGML('[$val[0]'), PGML('[_____]{$z[0]}')],
-    [PGML('[$mean[1]'), PGML('[$sd[1]'), [PGML('[_____]{$val[1]}'), PGML('[$z[1]')],
-    [PGML('[$mean[2]'), PGML('[_____]{$sd[2]}'), [PGML('[$val[2]'), PGML('[$z[2]')],
-    [PGML('[_____]{$mean[3]}'), PGML('[$sd[3]'), [PGML('[$val[3]'), PGML('[$z[3]')]
-  ])
+    [PGML('[$mean[0]]'), PGML('[$sd[0]]'), PGML('[$val[0]]'), PGML('[_____]{$z[0]}')],
+    [PGML('[$mean[1]]'), PGML('[$sd[1]]'), PGML('[_____]{$val[1]}'), PGML('[$z[1]]')],
+    [PGML('[$mean[2]]'), PGML('[_____]{$sd[2]}'), PGML('[$val[2]]'), PGML('[$z[2]]')],
+    [PGML('[_____]{$mean[3]}'), PGML('[$sd[3]]'), PGML('[$val[3]]'), PGML('[$z[3]]')]
+    ])
 );
 
-END_PGML
+
+
 
 COMMENT('MathObject version. Uses PGML.');
 
