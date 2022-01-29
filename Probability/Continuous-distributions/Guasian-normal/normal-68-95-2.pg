@@ -1,0 +1,84 @@
+## DESCRIPTION
+## Use 86-95-99.7 Rule to answer questions about normal distributions.
+## ENDDESCRIPTION/
+
+## MO(1)
+## DBsubject(Statistics)
+## DBchapter(Continuous Distributions)
+## DBsection(Gaussian normal)
+## Date(01/29/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('normal distribution', '68-95-99.7', 'empirical rule' )
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.001);
+
+$seed = hash2seed($studentLogin);
+
+
+
+($mean, $sd, $a, $b, $below_a, $above_b, $between_ab, $low95, $hi95) = rserve_eval('
+  M <- sample(10 * (11:19), 1);
+  SD <- sample(4:15, 1);
+  z1 <- sample(1:2, 1)
+  z2 <- 3 - z1;
+  a <- M - z1 * SD;
+  b <- M + z2 * SD;
+  below_a <- c(0.16, 0.25)[z1];
+  above_b <- c(0.16, 0.25)[z2];
+  between_ab <- 1 - below_a - above_b
+  c(M, SD, a, b, below_a, above_b, between_ab, M - 2*SD, M + 2*SD);
+');
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+A normal distribution has mean [$mean] and standard deviation [$sd].  Use
+the 68-95-99.7 rule to answer the following questions. (You can get
+more accurate values use computer software, but don't do that here.)
+
+What proportion of the distribution is below [$a]?
+
+* answer: [___]{$below_a}{10}
+
+What proportion of the distribution is above [$b]?
+
+* answer: [___]{$above_b}{10}
+
+What proportion of the distribution is between [$a and $b]?
+
+* answer: [___]{$between_ab}{10}
+
+95% of the distribution is between what two values?
+
+* answer: between [___]{$lo95}{10} and $[___]{$hi95}{10}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
