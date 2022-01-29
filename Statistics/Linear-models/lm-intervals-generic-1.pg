@@ -53,9 +53,9 @@ rserve_eval('
     y = B0 + B1 * x + B2 * (group == "B") + rnorm(n, 0, SIGMA)
   );
   model <- lm(y ~ x + group, data = SimData);
-  msummary(model) |> capture.output() |> paste(collapse = "\n<BR>");
+  output <- model |> msummary() |> capture.output() |> paste(collapse = "\n");
+  paste("<pre>", output, "</pre>", collapse = "\n");
   ');
-
 
 ($n, $lo_x, $hi_x, $lo_group, $hi_group) = rserve_eval('
   c(n, confint(model)[2,], confint(model)[3, ]);
@@ -81,11 +81,11 @@ How many observations were in the data set?
 
 * answer: [___]{$n}{10}
 
-Give a 95% confidence interval for the coeficient on x:
+Give a 95% confidence interval for the coeficient on *x*:
 
 * answer: from [___]{$lo_x}{10} to [___]{$hi_x}{10}
 
-Give a 95% confidence interval for the coefficient on group:
+Give a 95% confidence interval for the coefficient on *group*:
 
 * answer: from [___]{$lo_group}{10} to [___]{$hi_group}{10}
 
