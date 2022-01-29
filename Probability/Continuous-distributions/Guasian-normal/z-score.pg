@@ -1,0 +1,76 @@
+## DESCRIPTION
+## Given three of mean, sd, value, and z-score, find the fourth.
+## ENDDESCRIPTION/
+
+## MO(1)
+## DBsubject(Statistics)
+## DBchapter(Continuous Distributions)
+## DBsection(Gaussian normal)
+## Date(01/29/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('z-score')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "niceTables.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.001);
+
+$seed = hash2seed($studentLogin);
+
+rserve_eval('
+  means <- sample(21:45, 5);
+  sds <- sample(seq(0.5, 5.5, by=0.4), 5);
+  zs <- sample(seq(-3, 3, by = 0.1), 5);
+  vals <- means + zs * sds;
+');
+
+@mean = rserve_eval('means');
+@sd = rserve_eval('sds');
+@z = rserve_eval('zs');
+@val = rserve_eval('vals');
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+Fill in the missing values.
+
+
+TEXT(
+  DataTable([
+    ['mean', 'standard deviation', 'value', 'z-score'],
+    [PGML('[$mean[0]'), PGML('[$sd[0]'), [PGML('[$val[0]'), PGML('[_____]{$z[0]}')],
+    [PGML('[$mean[1]'), PGML('[$sd[1]'), [PGML('[_____]{$val[1]}'), PGML('[$z[1]')],
+    [PGML('[$mean[2]'), PGML('[_____]{$sd[2]}'), [PGML('[$val[2]'), PGML('[$z[2]')],
+    [PGML('[_____]{$mean[3]}'), PGML('[$sd[3]'), [PGML('[$val[3]'), PGML('[$z[3]')]
+  ])
+);
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
