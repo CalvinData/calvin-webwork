@@ -40,21 +40,21 @@ rserve_eval('
   ');
 
 
-($model.summary) = rserve_eval('
+($model_summary) = rserve_eval('
   n <- sample(8:20, 1);
   B0 <- runif(1, 2, 30);
   B1 <- runif(1, -10, -0.11);
-  B2 <- runif(1, B1 * 0.5, B1 * 4);
-  SIGMA <- runif(1, B2 * 0.25, B2 * 2);
+  B2 <- runif(1, abs(B1) * 0.5, abs(B1) * 4);
+  SIGMA <- runif(1, abs(B2) * 0.25, abs(B2) * 2);
   SimData <-
   tibble(
     x = runif(n, 10, 80),
-    group = sample(c("A", "B"), n, replace = TRUE),
+    group = rep(c("A", "B"), length.out = n),
     y = B0 + B1 * x + B2 * (group == "B") + rnorm(n, 0, SIGMA)
   );
   model <- lm(y ~ x + group, data = SimData);
-  msummary(model) |> capture.output() |> paste(collapse = "\n");
-);
+  msummary(model) |> capture.output() |> paste(collapse = "\n<BR>");
+  ');
 
 
 ($n, $lo_x, $hi_x, $lo_group, $hi_group) = rserve_eval('
@@ -71,9 +71,9 @@ A linear model predicting a quantitative variable y from a quantitative predicto
 and a categorical predictor group (with levels A and B) produced the following
 output.
 
-```
-[$model_summary]
-```
+
+[$model_summary]*
+
 
 Use the output to answer the following questions.
 
@@ -83,11 +83,11 @@ How many observations were in the data set?
 
 Give a 95% confidence interval for the coeficient on x:
 
-* answer: from [___]{$lo_x}{10} to [___]{$hi_x}{10} to
+* answer: from [___]{$lo_x}{10} to [___]{$hi_x}{10}
 
 Give a 95% confidence interval for the coefficient on group:
 
-* answer: from [___]{$lo_group}{10} to [___]{$hi_group}{10} to
+* answer: from [___]{$lo_group}{10} to [___]{$hi_group}{10}
 
 
 END_PGML
