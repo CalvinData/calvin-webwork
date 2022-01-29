@@ -59,17 +59,17 @@ A normal distribution has mean [$mean] and standard deviation [$sd].  Use
 the 68-95-99.7 rule to answer the following questions. (You can get
 more accurate values use computer software, but don't do that here.)
 
-What perent of the distribution is between [$a] and [$b]?
+What percent of the distribution is between [$a] and [$b]?
 
-* answer: [___]{$between_ab}{10}
+* answer: [___]{$between_ab}{10}%
 
-What perent of the distribution is below [$a]?
+What percent of the distribution is below [$a]?
 
-* answer: [___]{$below_a}{10}
+* answer: [___]{$below_a}{10}%
 
-What perent of the distribution is above [$b]?
+What percent of the distribution is above [$b]?
 
-* answer: [___]{$above_b}{10}
+* answer: [___]{$above_b}{10}%
 
 END_PGML
 
