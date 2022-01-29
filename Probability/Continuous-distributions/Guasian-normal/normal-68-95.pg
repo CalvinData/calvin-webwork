@@ -44,7 +44,7 @@ $seed = hash2seed($studentLogin);
   z2 <- z1;
   a <- M - z1 * SD;
   b <- M + z2 * SD;
-  below_a <- c(0.16, 0.25)[z1];
+  below_a <- c(0.16, 0.025)[z1];
   above_b <- c(0.16, 0.025)[z2];
   between_ab <- 1 - below_a - above_b
   c(M, SD, a, b, below_a, above_b, between_ab, M - 2*SD, M + 2*SD);

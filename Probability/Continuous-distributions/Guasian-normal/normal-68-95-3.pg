@@ -46,8 +46,8 @@ $seed = hash2seed($studentLogin);
   z2 <- 3;
   a <- M - z1 * SD;
   b <- M + z2 * SD;
-  below_a <- c(0.16, 0.25, 0.0015)[z1];
-  above_b <- c(0.16, 0.25, 0.0015)[z2];
+  below_a <- c(0.16, 0.025, 0.0015)[z1];
+  above_b <- c(0.16, 0.025, 0.0015)[z2];
   between_ab <- 1 - below_a - above_b
   c(M, SD, a, b, below_a, above_b, between_ab, M - 2*SD, M + 2*SD);
 ');
@@ -69,7 +69,7 @@ What proportion of the distribution is above [$b]?
 
 * answer: [___]{$above_b}{10}
 
-What proportion of the distribution is between [$a and $b]?
+What proportion of the distribution is between [$a] and [$b]?
 
 * answer: [___]{$between_ab}{10}
 
