@@ -78,7 +78,6 @@ coef_table;
 anova_table;
 
 
-
 output1 <- coef_table |> capture.output() |> paste(collapse = "\n");
 output2 <- anova_table |> capture.output() |> paste(collapse = "\n");
 c(paste("<pre>", output1, "</pre>", collapse = "\n"),
@@ -99,7 +98,11 @@ A linear model predicting a quantitative variable y from a quantitative predicto
 and a categorical predictor group (with levels A and B) produced the following
 output.
 
+*Coefficients Table*
+
 [$output1]*
+
+*Type 2 ANOVA table*
 
 [$output2]*
 
