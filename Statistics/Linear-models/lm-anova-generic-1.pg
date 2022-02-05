@@ -51,14 +51,14 @@ dfround <- function(x, digits = 2) {
 
 n <- sample(20:25, 1);
 B0 <- runif(1, 2, 30);
-B1 <- runif(1, -0.03, -0.025);
-B2 <- abs(B1) * 8.2;
-SIGMA <- runif(1, 6 * abs(B2), abs(B2) * 8);
+B1 <- runif(1, -0.023, -0.022);
+B2 <- runif(1, 0.37, 0.39);
+SIGMA <- runif(1, 1.2, 1.3);
 SimData <-
   tibble(
     x = runif(n, 10, 80),
     group = rep(c("A", "B"), length.out = n),
-    y = B0 + B1 * x + B2 * (group == "B") + rnorm(n, 0, SIGMA)
+    y = B0 + B1 * x + B2 * (group == "B") + sample(qnorm(ppoints(n), 0, SIGMA))
   );
 model <- lm(y ~ x + group, data = SimData);
 coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(2) |> data.frame();
