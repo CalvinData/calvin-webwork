@@ -48,11 +48,12 @@ dfround <- function(x, digits = 2) {
   x
 };
 
-n <- sample(8:20, 1);
+
+n <- sample(20:25, 1);
 B0 <- runif(1, 2, 30);
-B1 <- runif(1, -10, -0.11);
-B2 <- runif(1, abs(B1) * 0.5, abs(B1) * 4);
-SIGMA <- runif(1, abs(B2) * 0.25, abs(B2) * 2);
+B1 <- runif(1, -0.03, -0.025);
+B2 <- abs(B1) * 8.2;
+SIGMA <- runif(1, 6 * abs(B2), abs(B2) * 8);
 SimData <-
   tibble(
     x = runif(n, 10, 80),
