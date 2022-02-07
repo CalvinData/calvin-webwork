@@ -32,6 +32,7 @@ TEXT(beginproblem());
 #  Setup
 
 Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
 
 rserve_eval('
   library(tidyr); library(dplyr); library(kableExtra);
@@ -61,8 +62,8 @@ SimData <-
     y = B0 + B1 * x + B2 * (group == "B") + sample(qnorm(ppoints(n), 0, SIGMA))
   );
 model <- lm(y ~ x + group, data = SimData);
-coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(3) |> data.frame();
-anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(3) |> data.frame();
+coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
+anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
 
 missing_1 <- coef_table[2, "t"];
 coef_table[2, "t"] <- "M1";
