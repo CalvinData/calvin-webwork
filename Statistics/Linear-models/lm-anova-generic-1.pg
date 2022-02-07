@@ -85,7 +85,7 @@ c(paste("<pre>", output1, "</pre>", collapse = "\n"),
   ');
 
 ($ans1, $ans2, $ans3, $ans4) = rserve_eval('
-  c(missing_2, missing_2, missing_3, missing_4);
+  c(missing_1, missing_2, missing_3, missing_4);
 ');
 
 
