@@ -42,7 +42,7 @@ rserve_eval('
   ');
 
 
-($output1, $output2) = rserve_eval('
+rserve_eval('
 dfround <- function(x, digits = 3) {
   for (i in 1:ncol(x)) {
     if (is.numeric(x[[i]])) x[[i]] <- round(x[[i]], digits);
@@ -61,17 +61,21 @@ create_data <-
       mutate(
         group = LETTERS[x],
         y = MEAN[x] + qnorm(ppoints(n)[rep], 0, SD[x])
-      );
+      ) |>
+      dfround(1);
   };
 
 SimData <- create_data(n = 20, n_groups = sample(3:5, 1), sd = 7);
-row <- sample(1:nrow, 1);
+row <- sample(1:nrow(SimData), 1);
 model <- lm(y ~ 1 + group, data = SimData);
 coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
 anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
 
 output1 <- coef_table |> capture.output() |> paste(collapse = "\n");
 output2 <- anova_table |> capture.output() |> paste(collapse = "\n");
+');
+
+($output1, $output2) = rserve_eval('
 c(paste("<pre>", output1, "</pre>", collapse = "\n"),
   paste("<pre>", output2, "</pre>", collapse = "\n"));
   ');
