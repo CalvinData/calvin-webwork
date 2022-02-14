@@ -69,20 +69,18 @@ model <- lm(y ~ 1 + group, data = SimData);
 coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
 anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
 
-missing_df <- anova_table[2, "df"];
+missing_df <- anova_table[1, "df"];
 anova_table[1, "df"] <- "M1";
-missing_F <- anova_table[1, "p.value"];
+missing_F <- anova_table[1, "F"];
 anova_table[1, "F"] <- "M2";
 missing_p <- anova_table[1, "p.value"];
 anova_table[1, "p.value"] <- "M3";
 
-output1 <- coef_table |> capture.output() |> paste(collapse = "\n");
-output2 <- anova_table |> capture.output() |> paste(collapse = "\n");
-c(paste("<pre>", output1, "</pre>", collapse = "\n"),
-  paste("<pre>", output2, "</pre>", collapse = "\n"));
-  ');
+output1 <- anova_table |> capture.output() |> paste(collapse = "\n");
+paste("<pre>", output1, "</pre>", collapse = "\n");
+');
 
-($ans1, $ans2, $ans3, $ans4) = rserve_eval('
+($ans1, $ans2, $ans3) = rserve_eval('
   c(missing_df, missing_F, missing_p);
 ');
 
@@ -94,9 +92,7 @@ $image_path = ggplot(code => 'gf_boxplot(y ~ group, data = SimData)' );
 
 BEGIN_PGML
 
-A linear model predicting a quantitative variable y from a quantitative predictor x
-and a categorical predictor group (with levels A and B) produced the following
-output.
+A one-way ANOVA analysis produced the following output.
 
 [@ image($image_path, width => 600, height => 400) @]*
 
@@ -104,7 +100,7 @@ output.
 
 [$output1]*
 
-Notice that three of the values are missing. What are the missing values?
+Notice that three of the values in the ANOVA table are missing. What are the missing values?
 
 * M1: [___]{$ans1}{10}
 
