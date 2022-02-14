@@ -59,27 +59,27 @@ Customers arrive and join one line and then are servered by the next available t
 
 Some output from a One-Way ANOVA appears below.
 
-:   Source      df    SS    MS     F    p-value
-:   teller       5  3315   663  1.51     0.1914
-:   residuals  134 58919   440
+:   Source      df     SS    MS     F   p-value
+:   teller       5   3315   663  1.51    0.1914
+:   residuals  134  58919   440
 
-* Can we reject the null hypothesis that all six bank tellers spend the same mean time per customer?
+a) Can we reject the null hypothesis that all six bank tellers spend the same mean time per customer?
 
 [@ $radio1->buttons @]*
 
-* Would it be appropriate to perform Tukey's Honest Signifcant Differences next to see which
+b) Would it be appropriate to perform Tukey's Honest Signifcant Differences next to see which
 tellers are especially fast or slow?
 
 [@ $radio2->buttons @]*
 
 END_PGML
 
-install_problem_grader(~~$std_problem_grader);
+install_problem_grader(~~&std_problem_grader);
 
 $showPartialCorrectAnswers = 0;
 
-ANS($radio1$cmp);
-ANS($radio2$cmp);
+ANS($radio1->cmp());
+ANS($radio2->cmp());
 
 COMMENT('MathObject version. Uses PGML.');
 
