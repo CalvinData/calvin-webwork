@@ -1,0 +1,119 @@
+## DESCRIPTION
+## ANOVA; syntetic data
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Multiple Regression)
+## DBsection(Hypothesis Tests)
+## Date(2/14/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('models', 'ANOVA', 'hypothesis test', 'regression table')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+rserve_eval('
+  library(tidyr); library(dplyr); library(kableExtra);
+  library(pander); library(mosaic);
+  options(show.signif.stars = FALSE);
+  ');
+
+
+($output1, $output2) = rserve_eval('
+dfround <- function(x, digits = 3) {
+  for (i in 1:ncol(x)) {
+    if (is.numeric(x[[i]])) x[[i]] <- round(x[[i]], digits);
+  }
+  x
+};
+
+
+create_data <-
+  function(n, x = 1:4, means = 10:20, sd = 5.5) {
+
+    MEAN <- sample(means, 4);
+    SD <- runif(4, sd - 0.5, sd + 0.5);
+
+    expand.grid(rep = 1:n, x = 1:4) |>
+      mutate(
+        group = LETTERS[x],
+        y = MEAN[x] + qnorm(ppoints(n)[rep], 0, SD[x])
+      );
+  };
+
+SimData <- create_data(n = 20, sd = 7);
+model <- lm(y ~ 1 + group, data = SimData);
+coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
+anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
+
+missing_df <- anova_table[2, "df"];
+anova_table[1, "df"] <- "M1";
+missing_F <- anova_table[1, "p.value"];
+anova_table[1, "F"] <- "M2";
+missing_p <- anova_table[1, "p.value"];
+anova_table[1, "p.value"] <- "M3";
+
+output1 <- coef_table |> capture.output() |> paste(collapse = "\n");
+output2 <- anova_table |> capture.output() |> paste(collapse = "\n");
+c(paste("<pre>", output1, "</pre>", collapse = "\n"),
+  paste("<pre>", output2, "</pre>", collapse = "\n"));
+  ');
+
+($ans1, $ans2, $ans3, $ans4) = rserve_eval('
+  c(missing_df, missing_F, missing_p);
+');
+
+$image_path = ggplot(code => 'gf_boxplot(y ~ group, data = SimData)' );
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+A linear model predicting a quantitative variable y from a quantitative predictor x
+and a categorical predictor group (with levels A and B) produced the following
+output.
+
+[@ image($image_path, width => 600, height => 400) @]*
+
+*ANOVA table*
+
+[$output1]*
+
+Notice that three of the values are missing. What are the missing values?
+
+* M1: [___]{$ans1}{10}
+
+* M2: [___]{$ans2}{10}
+
+* M3: [___]{$ans3}{10}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
