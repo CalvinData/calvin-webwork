@@ -1,0 +1,86 @@
+## DESCRIPTION
+## 1-way ANOVA for bank tellers
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Hypothesis Tests)
+## DBsection(One-Way ANOVA)
+## Date(2/14/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('ANOVA', 'hypothesis test')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "parserRadioButtons.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+
+$radio1 = RadioButtons(
+  ["Yes","No"],
+  "No", # correct answer
+  last => ["No"], # can be a list
+);
+
+
+$radio2 = RadioButtons(
+  ["Yes","No"],
+  "No", # correct answer
+  last => ["No"], # can be a list
+);
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+A bank is studying the average time it takes for six of its tellers to server a customer.
+Customers arrive and join one line and then are servered by the next available teller.
+
+Some output from a One-Way ANOVA appears below.
+
+:   Source      df    SS    MS     F    p-value
+:   teller       5  3315   663  1.51     0.1914
+:   residuals  134 58919   440
+
+* Can we reject the null hypothesis that all six bank tellers spend the same mean time per customer?
+
+[@ $radio1->buttons @]*
+
+* Would it be appropriate to perform Tukey's Honest Signifcant Differences next to see which
+tellers are especially fast or slow?
+
+[@ $radio2->buttons @]*
+
+END_PGML
+
+install_problem_grader(~~$std_problem_grader);
+
+$showPartialCorrectAnswers = 0;
+
+ANS($radio1$cmp);
+ANS($radio2$cmp);
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
