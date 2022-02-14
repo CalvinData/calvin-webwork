@@ -1,0 +1,109 @@
+## DESCRIPTION
+## ANOVA; syntetic data
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Multiple Regression)
+## DBsection(Hypothesis Tests)
+## Date(2/14/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('models', 'ANOVA', 'hypothesis test', 'regression table')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+rserve_eval('
+  library(tidyr); library(dplyr); library(kableExtra);
+  library(pander); library(mosaic);
+  options(show.signif.stars = FALSE);
+  ');
+
+
+($output1, $output2) = rserve_eval('
+dfround <- function(x, digits = 3) {
+  for (i in 1:ncol(x)) {
+    if (is.numeric(x[[i]])) x[[i]] <- round(x[[i]], digits);
+  }
+  x
+};
+
+
+create_data <-
+  function(n, n_groups = 4, means = 10:20, sd = 5.5) {
+
+    MEAN <- sample(means, n_groups);
+    SD <- runif(n_groups, sd * 0.7, sd / 1.3);
+
+    expand.grid(rep = 1:n, x = 1:n_groups) |>
+      mutate(
+        group = LETTERS[x],
+        y = MEAN[x] + qnorm(ppoints(n)[rep], 0, SD[x])
+      );
+  };
+
+SimData <- create_data(n = 20, n_groups = sample(3:5, 1), sd = 7);
+row <- sample(1:nrow, 1);
+model <- lm(y ~ 1 + group, data = SimData);
+coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
+anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
+
+output1 <- coef_table |> capture.output() |> paste(collapse = "\n");
+output2 <- anova_table |> capture.output() |> paste(collapse = "\n");
+paste("<pre>", output1, output2, "</pre>", collapse = "\n");
+');
+
+($group, $response, $residual) = rserve_eval('
+  c(SimData[row, "group"], SimData[row, "y"], resid(model)[row]);
+');
+
+
+$image_path = ggplot(code => 'gf_boxplot(y ~ group, data = SimData)' );
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+A one-way ANOVA analysis produced the following output.
+
+[@ image($image_path, width => 600, height => 400) @]*
+
+[$output1]*
+
+
+[$output2]*
+
+One of the subjects in group [$group] had a response value (y) of [$response]. What is the residual for this
+subject?
+
+* residual = [___]{$residual}{10}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
