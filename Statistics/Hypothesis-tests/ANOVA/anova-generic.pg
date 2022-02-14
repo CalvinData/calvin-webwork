@@ -42,7 +42,7 @@ rserve_eval('
   ');
 
 
-($output1, $output2) = rserve_eval('
+($output1) = rserve_eval('
 dfround <- function(x, digits = 3) {
   for (i in 1:ncol(x)) {
     if (is.numeric(x[[i]])) x[[i]] <- round(x[[i]], digits);

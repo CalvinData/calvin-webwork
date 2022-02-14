@@ -72,8 +72,9 @@ anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |
 
 output1 <- coef_table |> capture.output() |> paste(collapse = "\n");
 output2 <- anova_table |> capture.output() |> paste(collapse = "\n");
-paste("<pre>", output1, output2, "</pre>", collapse = "\n");
-');
+c(paste("<pre>", output1, "</pre>", collapse = "\n"),
+  paste("<pre>", output2, "</pre>", collapse = "\n"));
+  ');
 
 ($group, $response, $residual) = rserve_eval('
   c(SimData[row, "group"], SimData[row, "y"], resid(model)[row]);
