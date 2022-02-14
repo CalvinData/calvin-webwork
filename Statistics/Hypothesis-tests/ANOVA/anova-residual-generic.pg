@@ -52,7 +52,7 @@ dfround <- function(x, digits = 3) {
 
 
 create_data <-
-  function(n, n_groups = 4, means = 10:20, sd = 5.5) {
+  function(n, n_groups = 4, means = seq(10, 20, by = 0.1), sd = 5.5) {
 
     MEAN <- sample(means, n_groups);
     SD <- runif(n_groups, sd * 0.7, sd / 1.3);
