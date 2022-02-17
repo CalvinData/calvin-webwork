@@ -61,7 +61,7 @@ create_data <-
     )
   };
 
-SimData <- create_data();
+SimData <- create_data(n = sample(200:300, 1));
 model <- glm(y ~ group, data = SimData, family = "binomial");
 model_f <- makeFun(model);
 
