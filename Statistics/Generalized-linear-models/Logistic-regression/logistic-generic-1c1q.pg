@@ -87,6 +87,8 @@ rserve_eval('
 
 
 @prob = rserve_eval('Values$prob;');
+@x = rserve_eval('Values$x;');
+@group = rserve_eval('Values$group;');
 ($n) = rserve_eval('nrow(SimData);');
 
 ###########################
@@ -106,9 +108,9 @@ How many rows were in the data set?
 
 Determine each of the following model probabilty values.
 
-* [` P(Y = 1 \mid \mathrm{group} = A)`] = [___]{$prob[0]}{10}
-* [` P(Y = 1 \mid \mathrm{group} = B)`] = [___]{$prob[1]}{10}
-* [` P(Y = 1 \mid \mathrm{group} = C)`] = [___]{$prob[2]}{10}
+* [` P(Y = 1 \mid x = [$x[0]], \mathrm{group} = [$group[0]])`] = [___]{$prob[0]}{10}
+* [` P(Y = 1 \mid x = [$x[1]], \mathrm{group} = [$group[1]])`] = [___]{$prob[1]}{10}
+* [` P(Y = 1 \mid x = [$x[2]], \mathrm{group} = [$group[2]])`] = [___]{$prob[2]}{10}
 
 END_PGML
 
