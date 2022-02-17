@@ -83,7 +83,7 @@ paste("<pre>", output1, "</pre>", collapse = "\n");
 BEGIN_PGML
 
 The results of fitting a logistic regression model with one binary
-explanatory variable (groups A and B)are summarized below.
+explanatory variable (groups A and B) are summarized below.
 
 
 [$output1]*
