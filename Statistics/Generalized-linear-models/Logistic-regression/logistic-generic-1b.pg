@@ -56,7 +56,7 @@ create_data <-
   beta0 <- runif(1, min(beta1), max(beta1));
   dplyr::tibble(
     x = rep(x, length.out = n),
-    group = LETTERS[x],
+    group = LETTERS[1 + x],
     y = rbinom(n, 1, faraway::ilogit(beta0 + beta1 * x))
     )
   };
@@ -82,8 +82,8 @@ paste("<pre>", output1, "</pre>", collapse = "\n");
 
 BEGIN_PGML
 
-The results of fitting a logistic regression model with one quantitative explanatory variable x
-are summarized below.
+The results of fitting a logistic regression model with one binary
+explanatory variable (groups A and B)are summarized below.
 
 
 [$output1]*
