@@ -51,19 +51,22 @@ dfround <- function(x, digits = 3) {
 
 
 create_data <-
-  function(n = 100, beta0 = c(-1, 1), beta1 = c(0.2, 0.4), x = c(0,0,1)) {
-  if (n < 100) { n <- 100; };
+  function(n = 50, beta0 = c(-1, 1), beta1 = c(0.24, 0.4), beta2 = c(0.1, 0.15),
+           beta3 = c(0.03, 0.10), x = (1:10)/10, g = c(1,2,3)) {
   beta0 <- runif(1, min(beta0), max(beta0));
   beta1 <- runif(1, min(beta1), max(beta1));
+  beta2 <- runif(1, min(beta2), max(beta2));
+  beta3 <- runif(1, min(beta3), max(beta3));
   dplyr::tibble(
+    g = rep(g, length.out = n),
     x = rep(x, length.out = n),
-    group = LETTERS[1 + x],
-    y = rbinom(n, 1, faraway::ilogit(beta0 + beta1 * x))
+    group = LETTERS[x],
+    y = rbinom(n, 1, faraway::ilogit(beta0 + beta1 * (x == 1) + beta2 * (x == 2) + beta3 * x))
     )
   };
 
 SimData <- create_data(n = sample(200:300, 1));
-model <- glm(y ~ group, data = SimData, family = "binomial");
+model <- glm(y ~ x + group, data = SimData, family = "binomial");
 model_f <- makeFun(model);
 
 coef_table <- model |> broom::tidy() |>
@@ -73,20 +76,18 @@ output1 <- model |> mosaic::msummary() |> capture.output() |> paste(collapse = "
 paste("<pre>", output1, "</pre>", collapse = "\n");
 ');
 
-
-rserve_eval('
+reserve_eval('
   Values <- dplyr::tibble(
-    group = sort(unique(SimData$group)),
-    prob = model_f(group = group)
+    x = sample(unique(SimData$x), 4),
+    group = sample(unique(SimData$group), 4, replace = TRUE),
+    prob = model_f(x = x, group = group)
   );
   1;
 ');
 
 
 @prob = rserve_eval('Values$prob;')'
-@group =  rserve_eval('Valeues$group;');
 ($n) = rserve_eval('nrow(SimData);');
-
 
 ###########################
 #  Main text
@@ -94,7 +95,7 @@ rserve_eval('
 BEGIN_PGML
 
 The results of fitting a logistic regression model with one binary
-explanatory variable (groups A and B) are summarized below.
+explanatory variable (groups A, B, and C) are summarized below.
 
 
 [$output1]*
@@ -105,8 +106,9 @@ How many rows were in the data set?
 
 For each value of the explanatory variable below, determine the model probabilty value
 
-* [` P(Y = 1 \mid \mathrm{group} = [$group[0]])`] = [___]{$prob[0]}{10}
-* [` P(Y = 1 \mid \mathrm{group} = [$group[1]])`] = [___]{$prob[1]}{10}
+* [` P(Y = 1 \mid \mathrm{group} = A)`] = [___]{$prob[0]}{10}
+* [` P(Y = 1 \mid \mathrm{group} = B)`] = [___]{$prob[1]}{10}
+* [` P(Y = 1 \mid \mathrm{group} = C)`] = [___]{$prob[2]}{10}
 
 END_PGML
 

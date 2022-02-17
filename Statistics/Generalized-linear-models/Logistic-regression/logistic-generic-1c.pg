@@ -51,7 +51,8 @@ dfround <- function(x, digits = 3) {
 
 
 create_data <-
-  function(n = 50, beta0 = c(-1, 1), beta1 = c(0.24, 0.4), beta2 = c(0.1, 0.15), x = c(1,2,3)) {
+  function(n = 100, beta0 = c(-1, 1), beta1 = c(0.24, 0.4), beta2 = c(0.1, 0.15), x = c(1,2,3)) {
+  if (n < 100) { n <- 100; };
   beta0 <- runif(1, min(beta0), max(beta0));
   beta1 <- runif(1, min(beta1), max(beta1));
   beta2 <- runif(1, min(beta2), max(beta2));
@@ -73,7 +74,18 @@ output1 <- model |> mosaic::msummary() |> capture.output() |> paste(collapse = "
 paste("<pre>", output1, "</pre>", collapse = "\n");
 ');
 
-@prob = rserve_eval('model_f(LETTERS[1:3]);');
+
+reserve_eval('
+  Values <- dplyr::tibble(
+    group = sort(unique(SimData$group)),
+    prob = model_f(group = group)
+  );
+  1;
+');
+
+
+@prob = rserve_eval('Values$prob;')'
+@group = rserve_eval('Values$group;')'
 ($n) = rserve_eval('nrow(SimData);');
 
 
@@ -94,9 +106,9 @@ How many rows were in the data set?
 
 For each value of the explanatory variable below, determine the model probabilty value
 
-* [` P(Y = 1 \mid \mathrm{group} = A)`] = [___]{$prob[0]}{10}
-* [` P(Y = 1 \mid \mathrm{group} = B)`] = [___]{$prob[1]}{10}
-* [` P(Y = 1 \mid \mathrm{group} = C)`] = [___]{$prob[2]}{10}
+* [` P(Y = 1 \mid \mathrm{group} = [$group[0]])`] = [___]{$prob[0]}{10}
+* [` P(Y = 1 \mid \mathrm{group} = [$group[1]])`] = [___]{$prob[1]}{10}
+* [` P(Y = 1 \mid \mathrm{group} = [$group[2]])`] = [___]{$prob[2]}{10}
 
 END_PGML
 

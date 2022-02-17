@@ -71,8 +71,18 @@ output1 <- model |> mosaic::msummary() |> capture.output() |> paste(collapse = "
 paste("<pre>", output1, "</pre>", collapse = "\n");
 ');
 
-@x =  rserve_eval('x <- sample(unique(SimData$x), 3)');
-@prob = rserve_eval('model_f(x);');
+rserve_eval('
+  Values <- dplyr::tibble(
+    x = sample(unique(SimData$x), 4),
+    prob = model_f(x = x)
+  );
+  1;
+');
+
+
+@prob = rserve_eval('Values$prob;')'
+@x = rserve_eval('Values$x;')'
+
 ($x50) = rserve_eval(' - coef(model)[1] / coef(model)[2];');
 ($n) = rserve_eval('nrow(SimData);');
 
