@@ -1,0 +1,69 @@
+## DESCRIPTION
+## Odds and log odds calculations
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Generalized Linear Models)
+## DBsection(Logistic Regression)
+## Date(2/17/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('odds', 'log odds')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+@prob = rserve_eval('p <- c(50, runif(3, c(10, 55, 10), c(35, 90, 90))/100); p <- round(p, 3); p;');
+@odds = rserve_eval('odds <- p / (1-p); odds; round(odds,3)');
+@lodds = rserve_eval('lodds <- log(odds); round(lodds, 3)');
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+For each row fill in the missing values.
+
+* log odds = [$lodds[0]];
+odds = [___]{$odds[0]}{10};
+probability = [___]{$prob[0]}
+
+* log odds = [$lodds[1]];
+odds = [___]{$odds[1]}{10};
+probability = [___]{$prob[1]}
+
+* log odds = [___]{$lodds[2]}{10};
+odds = [$odds[2]];
+probability = [___]{$prob[2]}
+
+* log odds = [___]{$lodds[3]}{10};
+odds = [___]{$odds[3]}{10};
+probability = [$prob[3]]
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
