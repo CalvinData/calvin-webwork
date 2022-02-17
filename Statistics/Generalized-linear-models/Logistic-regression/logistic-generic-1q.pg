@@ -80,8 +80,8 @@ rserve_eval('
 ');
 
 
-@prob = rserve_eval('Values$prob;')'
-@x = rserve_eval('Values$x;')'
+@prob = rserve_eval('Values$prob;');
+@x = rserve_eval('Values$x;');
 
 ($x50) = rserve_eval(' - coef(model)[1] / coef(model)[2];');
 ($n) = rserve_eval('nrow(SimData);');

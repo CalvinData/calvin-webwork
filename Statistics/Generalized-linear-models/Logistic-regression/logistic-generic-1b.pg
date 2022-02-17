@@ -83,7 +83,7 @@ rserve_eval('
 ');
 
 
-@prob = rserve_eval('Values$prob;')'
+@prob = rserve_eval('Values$prob;');
 @group =  rserve_eval('Valeues$group;');
 ($n) = rserve_eval('nrow(SimData);');
 

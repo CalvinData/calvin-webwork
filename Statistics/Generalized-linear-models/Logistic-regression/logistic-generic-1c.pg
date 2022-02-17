@@ -75,7 +75,7 @@ paste("<pre>", output1, "</pre>", collapse = "\n");
 ');
 
 
-reserve_eval('
+rserve_eval('
   Values <- dplyr::tibble(
     group = sort(unique(SimData$group)),
     prob = model_f(group = group)
@@ -84,8 +84,8 @@ reserve_eval('
 ');
 
 
-@prob = rserve_eval('Values$prob;')'
-@group = rserve_eval('Values$group;')'
+@prob = rserve_eval('Values$prob;');
+@group = rserve_eval('Values$group;');
 ($n) = rserve_eval('nrow(SimData);');
 
 
