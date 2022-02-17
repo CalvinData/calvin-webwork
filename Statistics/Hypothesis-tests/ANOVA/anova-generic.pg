@@ -66,7 +66,6 @@ create_data <-
 
 SimData <- create_data(n = 20, n_groups = sample(3:5, 1), sd = 7);
 model <- lm(y ~ 1 + group, data = SimData);
-missing_p <- car::Anova(model)[1, "p.value"];
 coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
 anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
 
@@ -74,6 +73,7 @@ missing_df <- anova_table[1, "df"];
 anova_table[1, "df"] <- "M1";
 missing_F <- anova_table[1, "F"];
 anova_table[1, "F"] <- "M2";
+missing_p <- broom::tidy(car::Anova(model))[1, "p.value"];
 anova_table[1, "p.value"] <- "M3";
 
 output1 <- anova_table |> capture.output() |> paste(collapse = "\n");
