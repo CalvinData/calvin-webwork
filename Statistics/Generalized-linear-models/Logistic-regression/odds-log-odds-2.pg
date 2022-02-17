@@ -39,7 +39,7 @@ rserve_eval('
   Values <-
   dplyr::tibble(
     p = (c(50, runif(3, c(30, 80, 5), c(45, 95, 95)))/100) |> round(3),
-    odds = p / (1 - p) |> round(4),
+    odds = (p / (1 - p)) |> round(4),
     lodds = log(odds) |> round(4)
   );
   0;
