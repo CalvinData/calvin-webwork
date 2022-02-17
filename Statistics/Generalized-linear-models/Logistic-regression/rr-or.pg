@@ -1,0 +1,76 @@
+## DESCRIPTION
+## Relative Risk and Odds Ratio
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Generalized Linear Models)
+## DBsection(Logistic Regression)
+## Date(2/17/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('odds', 'log odds')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+);
+
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+rserve_eval('
+  Values <-
+  dplyr::tibble(
+    p = (runif(4, c(10, 20, 80, 5), c(12, 35, 95, 95)) / 100) |> round(2),
+    q = (runif(4, c(13, 50, 70, 5), c(15, 75, 79, 95)) / 100) |> round(2),
+    rr = p/q |> signif(4),
+    oddsp = p / (1-p) |> signif(4),
+    oddsq = q / (1-q) |> signif(4),
+    or = oddsp / oddsq |> signif(4)
+  );
+  0;
+');
+
+@p = rserve_eval('Values$p');
+@q = rserve_eval('Values$q');
+@rr = rserve_eval('Values$rr');
+@or = rserve_eval('Values$or');
+
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+Given two probabilities [`p`] and [`q`], compute the relative risk and the odds ratio.
+
+* [`p = [$p[0]]`] ; [`q = [$q[0]]`] ; relative risk = [___]{$rr[0]}{10}; odds ratio = [___]{$or[0]}{10}
+
+* [`p = [$p[1]]`] ; [`q = [$q[1]]`] ; relative risk = [___]{$rr[1]}{10}; odds ratio = [___]{$or[1]{10}}
+
+* [`p = [$p[2]]`] ; [`q = [$q[2]]`] ; relative risk = [___]{$rr[2]}{10}; odds ratio = [___]{$or[2]{10}}
+
+* [`p = [$p[3]]`] ; [`q = [$q[3]]`] ; relative risk = [___]{$rr[3]}{10}; odds ratio = [___]{$or[3]{10}}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML. Uses R.');
+
+ENDDOCUMENT();
