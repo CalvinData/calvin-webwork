@@ -35,7 +35,7 @@ TEXT(beginproblem());
 Context->("Numeric");
 Context()->flags->set(tolerance => 0.005);
 
-@prob = rserve_eval('p <- c(0.5, runif(1, 5, 35) / 100, runif(1, 45, 90)/100); p;');
+@prob = rserve_eval('p <- c(0.5, runif(1, 5, 35) / 100, runif(1, 45, 90)/100); p <- round(p, 2); p;');
 @odds = rserve_eval('odds <- p / (1-p); odds;');
 @lodds = rserve_eval('log(odds);');
 
