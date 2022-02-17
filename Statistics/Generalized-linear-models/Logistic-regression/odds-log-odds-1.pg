@@ -1,0 +1,66 @@
+## DESCRIPTION
+## ANOVA; syntetic data
+## ENDDESCRIPTION/
+
+
+## DBsubject(Statistics)
+## DBchapter(Multiple Regression)
+## DBsection(Hypothesis Tests)
+## Date(2/14/2022)
+## Institution(Calvin University)
+## Author(Randall Pruim)
+## KEYWORDS('odds', 'log odds')
+
+
+###########################
+#  Initialization
+
+DOCUMENT();
+
+loadMacros(
+  "PGstandard.pl",
+  "MathObjects.pl",
+  "RserveClient.pl",
+  "PGML.pl",
+  "PGcourse.pl",
+  "CalvinMacros.pl",
+);
+
+TEXT(beginproblem());
+
+
+###########################
+#  Setup
+
+Context->("Numeric");
+Context()->flags->set(tolerance => 0.005);
+
+rserve_eval('
+  library(tidyr); library(dplyr); library(kableExtra);
+  library(pander); library(mosaic);
+  options(show.signif.stars = FALSE);
+  ');
+
+
+@prob = rserve_eval('runif(3, 5, 95) / 100;');
+@odds = rserve_eval('p / (1-p);');
+@lodds = rserve_eval('log(odds);');
+
+###########################
+#  Main text
+
+BEGIN_PGML
+
+For each probability below, fill in the missing odds and log odds.
+
+* probability = $prob[0]; odds = [___]{$odds[0]}{10}; log odds = [___]{$lodds[0]}{10}
+
+* probability = $prob[1]; odds = [___]{$odds[1]}{10}; log odds = [___]{$lodds[1]}{10}
+
+* probability = $prob[2]; odds = [___]{$odds[2]}{10}; log odds = [___]{$lodds[2]}{10}
+
+END_PGML
+
+COMMENT('MathObject version. Uses PGML.');
+
+ENDDOCUMENT();
