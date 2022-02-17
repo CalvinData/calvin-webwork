@@ -62,17 +62,18 @@ SimData <-
     y = B0 + B1 * x + B2 * (group == "B") + sample(qnorm(ppoints(n), 0, SIGMA))
   );
 model <- lm(y ~ x + group, data = SimData);
+missing_2 <- broom::tidy(model)[2, "p.value"];
+missing_4 <- car::Anova(model)[2, "p.value"];
+
 coef_table <- model |> broom::tidy() |> rename(t = statistic) |> dfround(4) |> data.frame();
 anova_table <- model |> car::Anova() |> broom::tidy() |> rename(F = statistic) |> dfround(4) |> data.frame();
 
 missing_1 <- coef_table[2, "t"];
 coef_table[2, "t"] <- "M1";
-missing_2 <- coef_table[2, "p.value"];
 coef_table[2, "p.value"] <- "M2";
 
 missing_3 <- anova_table[2, "F"];
 anova_table[2, "F"] <- "M3";
-missing_4 <- anova_table[2, "p.value"];
 anova_table[2, "p.value"] <- "M4";
 
 coef_table;
