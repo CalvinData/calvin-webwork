@@ -35,9 +35,19 @@ TEXT(beginproblem());
 Context->("Numeric");
 Context()->flags->set(tolerance => 0.005);
 
-@prob = rserve_eval('p <- c(50, runif(3, c(10, 55, 10), c(35, 90, 90))/100); p <- round(p, 3); p;');
-@odds = rserve_eval('odds <- p / (1-p); odds; round(odds,3)');
-@lodds = rserve_eval('lodds <- log(odds); round(lodds, 3)');
+rserve_eval('
+  Values <-
+  dplyr::tibble(
+    p = (c(50, runif(3, c(30, 80, 5), c(45, 95, 95)))/100) |> round(3),
+    odds = p / (1 - p) |> round(4),
+    lodds = log(odds) |> round(4)
+  );
+  0;
+');
+
+@prob = rserve_eval('Values$p');
+@odds = rserve_eval('Values$odds');
+@lodds = rserve_eval('Values$lodds');
 
 ###########################
 #  Main text
@@ -48,15 +58,15 @@ For each row fill in the missing values.
 
 * log odds = [$lodds[0]];
 odds = [___]{$odds[0]}{10};
-probability = [___]{$prob[0]}
+probability = [___]{$prob[0]}{10}
 
 * log odds = [$lodds[1]];
 odds = [___]{$odds[1]}{10};
-probability = [___]{$prob[1]}
+probability = [___]{$prob[1]}{10}
 
 * log odds = [___]{$lodds[2]}{10};
 odds = [$odds[2]];
-probability = [___]{$prob[2]}
+probability = [___]{$prob[2]}{10}
 
 * log odds = [___]{$lodds[3]}{10};
 odds = [___]{$odds[3]}{10};

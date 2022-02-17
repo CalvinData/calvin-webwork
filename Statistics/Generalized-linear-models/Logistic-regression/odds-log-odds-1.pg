@@ -35,9 +35,20 @@ TEXT(beginproblem());
 Context->("Numeric");
 Context()->flags->set(tolerance => 0.005);
 
-@prob = rserve_eval('p <- c(0.5, runif(1, 5, 35) / 100, runif(1, 45, 90)/100); p <- round(p, 2); p;');
-@odds = rserve_eval('odds <- p / (1-p); odds;');
-@lodds = rserve_eval('log(odds);');
+rserve_eval('
+  Values <-
+  dplyr::tibble(
+    p = (c(50, runif(3, c(20, 75, 5), c(35, 90, 95)))/100) |> round(3),
+    odds = p / (1 - p) |> round(4),
+    lodds = log(odds) |> round(4)
+  );
+  0;
+');
+
+@prob = rserve_eval('Values$p');
+@odds = rserve_eval('Values$odds');
+@lodds = rserve_eval('Values$lodds');
+
 
 ###########################
 #  Main text
@@ -57,6 +68,10 @@ log odds = [___]{$lodds[1]}{10}
 * probability = [$prob[2]];
 odds = [___]{$odds[2]}{10};
 log odds = [___]{$lodds[2]}{10}
+
+* probability = [$prob[3]];
+odds = [___]{$odds[3]}{10};
+log odds = [___]{$lodds[3]}{10}
 
 END_PGML
 
