@@ -1,5 +1,5 @@
 ## DESCRIPTION
-## Odds, log odds computation
+## Odds and log odds calculations
 ## ENDDESCRIPTION/
 
 
@@ -23,8 +23,8 @@ loadMacros(
   "RserveClient.pl",
   "PGML.pl",
   "PGcourse.pl",
-  "CalvinMacros.pl",
 );
+
 
 TEXT(beginproblem());
 
@@ -35,11 +35,7 @@ TEXT(beginproblem());
 Context->("Numeric");
 Context()->flags->set(tolerance => 0.005);
 
-rserve_eval('
-  options(show.signif.stars = FALSE);
-  ');
-
-@prob = rserve_eval('p <- runif(3, 5, 95) / 100; p;');
+@prob = rserve_eval('p <- c(0.5, runif(1, 5, 35) / 100, runif(1, 45, 90)/100); p;');
 @odds = rserve_eval('odds <- p / (1-p); odds;');
 @lodds = rserve_eval('log(odds);');
 
@@ -50,20 +46,20 @@ BEGIN_PGML
 
 For each probability below, fill in the missing odds and log odds.
 
-* probability = $prob[0];
+* probability = [$prob[0]];
 odds = [___]{$odds[0]}{10};
 log odds = [___]{$lodds[0]}{10}
 
-* probability = $prob[1];
+* probability = [$prob[1]];
 odds = [___]{$odds[1]}{10};
 log odds = [___]{$lodds[1]}{10}
 
-* probability = $prob[2];
+* probability = [$prob[2]];
 odds = [___]{$odds[2]}{10};
 log odds = [___]{$lodds[2]}{10}
 
 END_PGML
 
-COMMENT('MathObject version. Uses PGML. Uses R.');
+COMMENT('MathObject version. Uses PGML.');
 
 ENDDOCUMENT();
