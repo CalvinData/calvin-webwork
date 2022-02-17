@@ -61,7 +61,7 @@ create_data <-
   };
 
 SimData <- create_data();
-model <- glm(y ~ x, data = SimData, family = 'binomial');
+model <- glm(y ~ x, data = SimData, family = "binomial");
 model_f <- makeFun(model);
 
 coef_table <- model |> broom::tidy() |>
@@ -71,9 +71,10 @@ output1 <- model |> mosaic::msummary() |> capture.output() |> paste(collapse = "
 paste("<pre>", output1, "</pre>", collapse = "\n");
 ');
 
-@x =  rserve_eval('x <- sample(unique(SimData$x), 3)
-@prob = reserve_eval('model_f(x);');
+@x =  rserve_eval('x <- sample(unique(SimData$x), 3)');
+@prob = rserve_eval('model_f(x);');
 ($x50) = rserve_eval(' - coef(model)[1] / coef(model)[2];');
+($n) = rserve_eval('nrow(SimData);');
 
 
 ###########################
@@ -87,15 +88,19 @@ are summarized below.
 
 [$output1]*
 
+How many rows were in the data set?
+
+* number of rows = [___]{$n}{10}
+
 For each value of the explanatory variable below, determine the model probabilty value
 
-* [` P(Y = 1 \mid x = [$x[0]]`] = [___]{$prob[0]}{10}
-* [` P(Y = 1 \mid x = [$x[1]]`] = [___]{$prob[1]}{10}
-* [` P(Y = 1 \mid x = [$x[2]]`] = [___]{$prob[2]}{10}
+* [` P(Y = 1 \mid x = [$x[0]])`] = [___]{$prob[0]}{10}
+* [` P(Y = 1 \mid x = [$x[1]])`] = [___]{$prob[1]}{10}
+* [` P(Y = 1 \mid x = [$x[2]])`] = [___]{$prob[2]}{10}
 
 For what value of the explanatory variable is the model probability value = 0.5?
 
-* answer: [___]{$x50}
+* answer: [___]{$x50}{10}
 
 END_PGML
 
