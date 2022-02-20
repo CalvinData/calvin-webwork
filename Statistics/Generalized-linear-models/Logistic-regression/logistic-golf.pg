@@ -51,18 +51,19 @@ rserve_eval("set.seed($seed)");
 rserve_eval('
 	probs <-	c(0.994,0.914, 0.807, 0.702, 0.606, 0.529, 0.464, 0.412);
 	Golf <-
-    tibble(
+    dplyr::tibble(
       distance =  c(3, 4, 5, 6, 7, 8, 9, 10),
       putts =  rpois(n = 8, lambda = 1100),
-		  makes =  rbinom(8, size = putts, prob = probs),
-		  misses = putts - makes
+      holes =  rbinom(8, size = putts, prob = probs),
+	  misses = putts - holes
 		);
+    1
 ');
 
 # Get the data for display
-$distance = join ", ", rserve_eval("paste(Golf$distance, collapse=' & ')");
-$putts = join ", ", rserve_eval("paste(Golf$putts, collapse=' & ')");
-$holes = join ", ", rserve_eval("paste(Golf$holes, collapse=' & ')");
+$distance = join ", ", rserve_eval("paste(Golf[['distance']], collapse=' & ')");
+$putts = join ", ", rserve_eval("paste(Golf[['putts']], collapse=' & ')");
+$holes = join ", ", rserve_eval("paste(Golf[['holes']], collapse=' & ')");
 
 # Part (a)
 
@@ -77,12 +78,12 @@ $mca->extra($ansa[0], $ansa[2], $ansa[3], $ansa[4]);
 # Part (b), (d), (e)
 
 @answers = rserve_eval('
-					resp <- cbind(holes, misses = putts - holes);
-					glm1 <- glm(cbind(makes, misses) ~ distance, data = Golf, family = binomial);
+					resp <- cbind(holes = Golf$holes, misses = Golf$misses);
+					glm1 <- glm(cbind(holes, misses) ~ distance, data = Golf, family = binomial);
 					prob <- 1/(1+exp(-(glm1$coef[1]+6*glm1$coef[2])));
 					odds <- exp(glm1$coef[1] + 8*glm1$coef[2]);
-					res <- resp[4]/putts[4] - 1/(1+exp(-(glm1$coef[1]+6*glm1$coef[2])));
-					c(round(prob, 3), round(odds, 3), round(res, 3), round(glm1$coef[1], 3), round(glm1$coef[2], 3), resp[4], putts[4])
+					res <- resp[4]/Golf$putts[4] - 1/(1+exp(-(glm1$coef[1]+6*glm1$coef[2])));
+					c(round(prob, 3), round(odds, 3), round(res, 3), round(glm1$coef[1], 3), round(glm1$coef[2], 3), resp[4], Golf$putts[4])
 					');
 $b0 = $answers[3];
 $b1 = $answers[4];
@@ -174,7 +175,7 @@ $BR
 Fit the logistic regression model to the data.
 You can \{ htmlLink($data_local_url, "download the data here") \}
 and fit the model using
-$BBOLD glm( cbind(makes, misses) ~ distance, ...) $EBOLD. This allows glm() to use summarized
+$BBOLD glm( cbind(holes, misses) ~ distance, ...) $EBOLD. This allows glm() to use summarized
 data like we have here.
 According to the model, what is the estimated probability of a professional holing a putt from
 six feet? Give your answer to two decimal places.
