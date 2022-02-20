@@ -63,11 +63,11 @@ Given two probabilities [`p`] and [`q`], compute the relative risk and the odds 
 
 * [`p = [$p[0]]`] ; [`q = [$q[0]]`] ; relative risk = [___]{$rr[0]}{10}; odds ratio = [___]{$or[0]}{10}
 
-* [`p = [$p[1]]`] ; [`q = [$q[1]]`] ; relative risk = [___]{$rr[1]}{10}; odds ratio = [___]{$or[1]{10}}
+* [`p = [$p[1]]`] ; [`q = [$q[1]]`] ; relative risk = [___]{$rr[1]}{10}; odds ratio = [___]{$or[1]}{10}
 
-* [`p = [$p[2]]`] ; [`q = [$q[2]]`] ; relative risk = [___]{$rr[2]}{10}; odds ratio = [___]{$or[2]{10}}
+* [`p = [$p[2]]`] ; [`q = [$q[2]]`] ; relative risk = [___]{$rr[2]}{10}; odds ratio = [___]{$or[2]}{10}
 
-* [`p = [$p[3]]`] ; [`q = [$q[3]]`] ; relative risk = [___]{$rr[3]}{10}; odds ratio = [___]{$or[3]{10}}
+* [`p = [$p[3]]`] ; [`q = [$q[3]]`] ; relative risk = [___]{$rr[3]}{10}; odds ratio = [___]{$or[3]}{10}
 
 END_PGML
 
