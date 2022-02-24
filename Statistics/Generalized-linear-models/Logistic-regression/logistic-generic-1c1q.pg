@@ -96,8 +96,8 @@ rserve_eval('
 
 BEGIN_PGML
 
-The results of fitting a logistic regression model with one binary
-explanatory variable (groups A, B, and C) are summarized below.
+The results of fitting a logistic regression model with one quantitative explanatory variable
+and one categorical explanatory variable (groups A, B, and C) are summarized below.
 
 
 [$output1]*
