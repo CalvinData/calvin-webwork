@@ -42,7 +42,7 @@ rserve_eval('
   means <- sample(21:45, 5);
   sds <- sample(seq(0.5, 5.5, by=0.4), 5);
   zs <- sample(seq(-3, 3, by = 0.1), 5);
-  vals <- means + zs * sds | round(2);
+  vals <- means + zs * sds;
 ');
 
 @mean = rserve_eval('means');
